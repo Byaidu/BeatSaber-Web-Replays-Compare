@@ -5,9 +5,6 @@ AFRAME.registerComponent('replay-player', {
 	init: function () {
 		this.saberEls = this.el.sceneEl.querySelectorAll('[saber-controls]');
 
-		this.firstSaberControl = this.saberEls[0].components['saber-controls'];
-		this.secondSaberControl = this.saberEls[1].components['saber-controls'];
-
 		this.replayDecoder = this.el.sceneEl.components['replay-loader'];
 		this.fpsCounter = this.el.sceneEl.components['fps-counter'];
 		this.song = this.el.sceneEl.components.song;
@@ -20,11 +17,13 @@ AFRAME.registerComponent('replay-player', {
 			multiplier: 1,
 		};
 
-		this.saberEls[0].object3D.position.y = 1.4;
-		this.saberEls[0].object3D.position.x = -0.4;
+		for (var index=0;index<2;index++){
+			this.saberEls[index*2].object3D.position.y = 1.4;
+			this.saberEls[index*2].object3D.position.x = -0.4;
 
-		this.saberEls[1].object3D.position.y = 1.4;
-		this.saberEls[1].object3D.position.x = 0.4;
+			this.saberEls[index*2+1].object3D.position.y = 1.4;
+			this.saberEls[index*2+1].object3D.position.x = 0.4;
+		}
 
 		this.euler = new THREE.Euler();
 		this.v1 = new THREE.Vector3();
@@ -43,43 +42,48 @@ AFRAME.registerComponent('replay-player', {
 	},
 
 	tock: function (time, delta) {
-		let replay = this.replayDecoder.replay;
+		let replay = this.replayDecoder.replay[0];
 		if (this.song.isPlaying && replay) {
-			const currentTime = this.song.getCurrentTime();
-			const frames = this.replayDecoder.replay.frames;
-			var frameIndex = 0;
-			while (frameIndex < frames.length - 2 && frames[frameIndex + 1].time < currentTime) {
-				frameIndex++;
-			}
-			const frame = frames[frameIndex];
-			const nextFrame = frames[frameIndex + 1];
+			for (var index=0;index<2;index++){
+				this.firstSaberControl = this.saberEls[index*2].components['saber-controls'];
+				this.secondSaberControl = this.saberEls[index*2+1].components['saber-controls'];
 
-			if (frame.time == 0 && nextFrame.time == 0) return;
-
-			this.fpsCounter.replayFps = frame.fps;
-			this.firstSaberControl.frameIndex = frameIndex;
-			this.secondSaberControl.frameIndex = frameIndex;
-
-			var replayHeight;
-			if (replay.heights.length) {
-				var heightFrameIndex = 0;
-				while (heightFrameIndex < replay.heights.length - 2 && replay.heights[heightFrameIndex + 1].time < currentTime) {
-					heightFrameIndex++;
+				const currentTime = this.song.getCurrentTime();
+				const frames = this.replayDecoder.replay[index].frames;
+				var frameIndex = 0;
+				while (frameIndex < frames.length - 2 && frames[frameIndex + 1].time < currentTime) {
+					frameIndex++;
 				}
-				replayHeight = replay.heights[heightFrameIndex].height;
-			} else {
-				replayHeight = replay.info.height;
+				const frame = frames[frameIndex];
+				const nextFrame = frames[frameIndex + 1];
+
+				if (frame.time == 0 && nextFrame.time == 0) return;
+
+				this.fpsCounter.replayFps = frame.fps;
+				this.firstSaberControl.frameIndex = frameIndex;
+				this.secondSaberControl.frameIndex = frameIndex;
+
+				var replayHeight;
+				if (replay.heights.length) {
+					var heightFrameIndex = 0;
+					while (heightFrameIndex < replay.heights.length - 2 && replay.heights[heightFrameIndex + 1].time < currentTime) {
+						heightFrameIndex++;
+					}
+					replayHeight = replay.heights[heightFrameIndex].height;
+				} else {
+					replayHeight = replay.info.height;
+				}
+
+				let height = clamp((replayHeight - 1.8) * 0.5, -0.2, 0.6);
+				let slerpValue = (currentTime - frame.time) / Math.max(1e-6, nextFrame.time - frame.time);
+
+				this.movementsTock(frame, nextFrame, height, slerpValue, delta / 1000, index);
 			}
-
-			let height = clamp((replayHeight - 1.8) * 0.5, -0.2, 0.6);
-			let slerpValue = (currentTime - frame.time) / Math.max(1e-6, nextFrame.time - frame.time);
-
-			this.movementsTock(frame, nextFrame, height, slerpValue, delta / 1000);
 		}
 	},
-	movementsTock: function (frame, nextFrame, height, slerpValue, delta) {
-		const leftSaber = this.saberEls[0].object3D;
-		const rightSaber = this.saberEls[1].object3D;
+	movementsTock: function (frame, nextFrame, height, slerpValue, delta, index) {
+		const leftSaber = this.saberEls[index*2].object3D;
+		const rightSaber = this.saberEls[index*2+1].object3D;
 		const leftHitboxSaber = this.firstSaberControl.hitboxSaber;
 		const rightHitboxSaber = this.secondSaberControl.hitboxSaber;
 		const headset = this.headset.object3D;
@@ -93,6 +97,7 @@ AFRAME.registerComponent('replay-player', {
 		leftHitboxSaber.position.set(v1.x, v1.y - height, -v1.z);
 		const lposition = v1.lerp(v2, slerpValue);
 		leftSaber.position.set(lposition.x, lposition.y - height, -lposition.z);
+		//console.log('id:'+index+' z:'+lposition.z)
 
 		v1.set(frame.r.p.x, frame.r.p.y, frame.r.p.z);
 		v2.set(nextFrame.r.p.x, nextFrame.r.p.y, nextFrame.r.p.z);

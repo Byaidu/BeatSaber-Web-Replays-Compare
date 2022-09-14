@@ -9,15 +9,18 @@ import {NoteCutDirection, difficultyFromName, clamp, ScoringType} from '../utils
 AFRAME.registerComponent('replay-loader', {
 	schema: {
 		playerID: {default: AFRAME.utils.getUrlParameter('playerID')},
+		playerID2: {default: AFRAME.utils.getUrlParameter('playerID2')},
 		link: {default: AFRAME.utils.getUrlParameter('link')},
 		isSafari: {default: false},
 		difficulty: {default: AFRAME.utils.getUrlParameter('difficulty') || 'ExpertPlus'},
 		mode: {default: AFRAME.utils.getUrlParameter('mode') || 'Standard'},
 		scoreId: {default: AFRAME.utils.getUrlParameter('scoreId')},
+		scoreId2: {default: AFRAME.utils.getUrlParameter('scoreId2')},
 	},
 
 	init: function () {
-		this.replay = null;
+		this.replay = [null, null];
+		this.allStructs = [null, null];
 		this.user = null;
 
 		let captureThis = this;
@@ -62,8 +65,8 @@ AFRAME.registerComponent('replay-loader', {
 	downloadReplay: function (hash, scoreId, error) {
 		this.el.sceneEl.emit('replayloadstart', null);
 		fetch(
-			'https://api.beatleader.xyz/score/' +
-				(scoreId ? `${scoreId}` : `${this.data.playerID}/${hash}/${this.data.difficulty}/${this.data.mode}`)
+			'https://bangor375.herokuapp.com/https://api.beatleader.xyz/score/' +
+				(this.data.scoreId ? `${this.data.scoreId}` : `${this.data.playerID}/${hash}/${this.data.difficulty}/${this.data.mode}`)
 		).then(async response => {
 			let data = response.status == 200 ? await response.json() : null;
 			if (data && data.playerId) {
@@ -86,15 +89,15 @@ AFRAME.registerComponent('replay-loader', {
 						if (replay.frames.length == 0) {
 							this.el.sceneEl.emit('replayloadfailed', {error: 'Replay broken, redownload and reinstall mod, please'}, null);
 						} else {
-							this.replay = replay;
+							this.replay[0] = replay;
 							const jd = replay.info.jumpDistance > 5 ? replay.info.jumpDistance : undefined;
 							this.el.sceneEl.emit(
 								'replayfetched',
 								{hash: replay.info.hash, difficulty: difficultyFromName(replay.info.difficulty), mode: replay.info.mode, jd},
 								null
 							);
-							if (this.challenge) {
-								this.processScores();
+							if (!this.allStructs[0] && this.challenge) {
+								this.processScores(0);
 							}
 						}
 					} else {
@@ -105,6 +108,69 @@ AFRAME.registerComponent('replay-loader', {
 				this.el.sceneEl.emit(
 					'userloaded',
 					{
+						index: 0,
+						name: this.user.name,
+						avatar: this.user.avatar,
+						country: this.user.country,
+						countryIcon: `https://cdn.beatleader.xyz/flags/${this.user.country.toLowerCase()}.png`,
+						profileLink: `https://beatleader.xyz/u/${this.user.id}`,
+						id: this.user.id,
+					},
+					null
+				);
+				let patreonFeatures = data.player.patreonFeatures;
+				if (patreonFeatures) {
+					this.el.sceneEl.emit('colorsFetched', {playerId: data.player.id, features: patreonFeatures}, null);
+				}
+			} else {
+				this.el.sceneEl.emit('replayloadfailed', {error: data == null ? 'This score was improved.' : data.errorMessage || error}, null);
+			}
+		});
+		fetch(
+			'https://bangor375.herokuapp.com/https://api.beatleader.xyz/score/' +
+				(this.data.scoreId2 ? `${this.data.scoreId2}` : `${this.data.playerID2}/${hash}/${this.data.difficulty}/${this.data.mode}`)
+		).then(async response => {
+			let data = response.status == 200 ? await response.json() : null;
+			if (data && data.playerId) {
+				let splittedName = data.replay.split(/\.|-|\//);
+				if (splittedName.length > 4) {
+					this.el.sceneEl.emit(
+						'replayInfofetched',
+						{
+							hash: splittedName[splittedName.length - 2],
+							leaderboardId: data.leaderboardId,
+							difficulty: difficultyFromName(splittedName[splittedName.length - 4]),
+							mode: splittedName[splittedName.length - 3],
+						},
+						null
+					);
+				}
+
+				checkBSOR(data.replay, true, replay => {
+					if (replay && replay.frames) {
+						if (replay.frames.length == 0) {
+							this.el.sceneEl.emit('replayloadfailed', {error: 'Replay broken, redownload and reinstall mod, please'}, null);
+						} else {
+							this.replay[1] = replay;
+							const jd = replay.info.jumpDistance > 5 ? replay.info.jumpDistance : undefined;
+							this.el.sceneEl.emit(
+								'replayfetched',
+								{hash: replay.info.hash, difficulty: difficultyFromName(replay.info.difficulty), mode: replay.info.mode, jd},
+								null
+							);
+							if (!this.allStructs[1] && this.challenge) {
+								this.processScores(1);
+							}
+						}
+					} else {
+						this.el.sceneEl.emit('replayloadfailed', {error: replay.errorMessage}, null);
+					}
+				});
+				this.user = data.player;
+				this.el.sceneEl.emit(
+					'userloaded',
+					{
+						index: 1,
 						name: this.user.name,
 						avatar: this.user.avatar,
 						country: this.user.country,
@@ -249,8 +315,8 @@ AFRAME.registerComponent('replay-loader', {
 		});
 	},
 
-	processScores: function () {
-		const replay = this.replay;
+	processScores: function (index) {
+		const replay = this.replay[index];
 		const map = this.challenge.beatmaps[this.challenge.mode][this.challenge.difficulty];
 		var mapnotes = [].concat(map._notes, map._chains);
 
@@ -340,16 +406,11 @@ AFRAME.registerComponent('replay-loader', {
 
 		for (var i = 0; i < mapnotes.length && i < noteStructs.length; i++) {
 			if (!group) {
-				if (i + offset == noteStructs.length) {
-					group = [];
-					break;
-				}
-				if (i > 0 && noteStructs[i + offset].eventType != 0 && noteStructs[i + offset].spawnTime == noteStructs[i + offset - 1].spawnTime) {
+				if (i > 0 && noteStructs[i + offset].spawnTime == noteStructs[i + offset - 1].spawnTime) {
 					offset++;
 					i--;
 					continue;
 				}
-
 				group = [i];
 				groupIndex = i;
 				groupTime = mapnotes[i]._time;
@@ -383,6 +444,7 @@ AFRAME.registerComponent('replay-loader', {
 			note.i = i;
 			if (!note.score) {
 				note.score = ScoreForNote(note.eventType, note.cutInfo, note.scoringType);
+				if (note.eventType == NoteEventType.good) note.scoreDetail = CutScoresForNote(note.cutInfo, note.scoringType);
 			}
 		}
 
@@ -447,7 +509,7 @@ AFRAME.registerComponent('replay-loader', {
 				note.accuracy = i == 0 ? 0 : allStructs[i - 1].accuracy;
 			}
 		}
-		this.allStructs = allStructs;
+		this.allStructs[index] = allStructs;
 		this.notes = noteStructs;
 		this.bombs = bombStructs;
 		this.walls = wallStructs;
@@ -500,8 +562,12 @@ AFRAME.registerComponent('replay-loader', {
 
 	challengeloadend: function (event) {
 		this.challenge = event;
-		if (!this.notes && this.replay) {
-			this.processScores();
+		console.log(this.replay)
+		if (!this.allStructs[0] && this.replay[0]) {
+			this.processScores(0);
+		}
+		if (!this.allStructs[1] && this.replay[1]) {
+			this.processScores(1);
 		}
 	},
 

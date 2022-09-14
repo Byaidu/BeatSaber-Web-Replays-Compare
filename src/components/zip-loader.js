@@ -162,7 +162,7 @@ AFRAME.registerComponent('zip-loader', {
 	fetchData: function (id, byHash) {
 		this.fetched = true;
 		document.cookie = 'aprilFools=1; expires=Sat, 03 Apr 2022 00:00:00 UTC; path=/';
-		return fetch(`/cors/beat-saver2/api/maps/${byHash ? 'hash' : 'id'}/${id}`).then(res => {
+		return fetch(`https://beatsaver.com/api/maps/${byHash ? 'hash' : 'id'}/${id}`).then(res => {
 			res.json().then(data => {
 				if (data.versions) {
 					const currentVersion = data.versions[0];

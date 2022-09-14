@@ -9,7 +9,7 @@ AFRAME.registerComponent('replay-info-ui', {
 	},
 
 	updateUI: function () {
-		const modifiers = this.replayLoader.replay.info.modifiers;
+		const modifiers = this.replayLoader.replay[0].info.modifiers;
 		let modifiersLabel = document.getElementById('modifiers');
 		modifiersLabel.innerHTML = modifiers;
 

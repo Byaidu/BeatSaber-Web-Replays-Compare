@@ -1,5 +1,6 @@
 function beatsaverCdnCors(url) {
-	return url.replace('https://eu.cdn.beatsaver.com/', '/cors/beat-saver-cdn/');
+	// return url.replace('https://eu.cdn.beatsaver.com/', '/cors/beat-saver-cdn/');
+	return url;
 }
 
 // From game

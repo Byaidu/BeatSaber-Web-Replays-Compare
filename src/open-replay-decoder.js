@@ -3,7 +3,7 @@ function checkBSOR(file, isLink, completion) {
 		if (file.split('.').pop() == 'bsor' || file.split('.').pop() == 'bsortemp') {
 			file = file.replace('https://cdn.discordapp.com/', '/cors/discord-cdn/');
 			var xhr = new XMLHttpRequest();
-			xhr.open('GET', file, true);
+			xhr.open('GET', 'https://bangor375.herokuapp.com/'+file, true);
 			xhr.responseType = 'blob';
 
 			xhr.onload = function () {

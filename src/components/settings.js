@@ -3,12 +3,12 @@ AFRAME.registerComponent('settings', {
 
 	init: function () {
 		this.settings = {
-			showHeadset: true,
+			showHeadset: false,
 			reducedDebris: true,
 			noEffects: false,
 			showHitboxes: false,
 			pixelRatio: 1.5,
-			saberWidth: 100,
+			saberWidth: 50,
 			showFps: false,
 			savedCameraDefault: false,
 			highlightErrors: false,
@@ -21,11 +21,11 @@ AFRAME.registerComponent('settings', {
 			cameraZPosition: 1,
 			fov: 60,
 			cameraXRotation: 0,
-			orthographicBackEnabled: document.body.clientWidth > 600,
+			orthographicBackEnabled: true,
 			orthographicBackFrustum: 1.4,
-			orthographicRightEnabled: false,
+			orthographicRightEnabled: true,
 			orthographicRightFrustum: 2,
-			orthographicTopEnabled: false,
+			orthographicTopEnabled: true,
 			orthographicTopFrustum: 2.4,
 
 			// Volume

@@ -1,7 +1,7 @@
 [dev]
     command = "npm run start"
     publish = ".publish"
-    port = 9999
+    port = 8888
     targetPort = 3003
 
 [[redirects]]

@@ -18,14 +18,14 @@
   id="inGameMenuTitles"
   render-order="hud"
   position="0 1.7 -2.3">
-    <a-entity mixin="gameMenuButtonText" text="value: PAUSED; color: #FAFAFA; width: 4" bind__visible="isPaused && !isFinished"></a-entity>
+    <a-entity mixin="gameMenuButtonText" text="value: PAUSED; color: #FAFAFA; width: 4" visible="false"></a-entity>
     <a-entity mixin="gameMenuButtonText" text="value: THE END; color: #FAFAFA; width: 4" bind__visible="isFinished"></a-entity>
 </a-entity>
 
 <a-entity
   id="gameMenu"
   render-order="hud"
-  bind__visible="isPaused"
+  visible="false"
   position="0 1.1 -2"
   play-sound="event: mouseenter; sound: #hoverSound"
   bind__play-sound="volume: settings.volume * 0.1">
@@ -35,7 +35,7 @@
     id="resumeButton"
     render-order="hud"
     mixin="gameMenuButton"
-    bind__visible-raycastable="isPaused && !isFinished"
+    visible="false"
     position="0 0.35 0"
     proxy-event="event: click; to: a-scene; as: gamemenuresume">
     <a-entity mixin="gameMenuButtonText" text="value: RESUME"></a-entity>
@@ -45,7 +45,7 @@
     id="restartButton"
     render-order="hud"
     mixin="gameMenuButton"
-    bind__visible-raycastable="isPaused"
+    visible="false"
     proxy-event="event: click; to: a-scene; as: gamemenurestart">
     <a-entity mixin="gameMenuButtonText" text="value: RESTART SONG"></a-entity>
   </a-entity>

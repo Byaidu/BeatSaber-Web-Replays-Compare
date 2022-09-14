@@ -172,15 +172,15 @@ AFRAME.registerComponent('beat', {
 	},
 
 	pause: function () {
-		this.el.object3D.visible = false;
-		if (this.data.type !== 'mine') {
-			this.partLeftEl.object3D.visible = false;
-			this.partRightEl.object3D.visible = false;
-		}
+		// this.el.object3D.visible = false;
+		// if (this.data.type !== 'mine') {
+		// 	this.partLeftEl.object3D.visible = false;
+		// 	this.partRightEl.object3D.visible = false;
+		// }
 	},
 
 	play: function () {
-		// this.glow = this.el.sceneEl.components['pool__beat-glow'].requestEntity();
+		this.glow = this.el.sceneEl.components['pool__beat-glow'].requestEntity();
 		if (!this.hitSaberEl) {
 			this.blockEl.object3D.visible = true;
 			this.destroyed = false;
@@ -375,6 +375,7 @@ AFRAME.registerComponent('beat', {
 
 		// Find corresponding score from replay
 		this.replayNote = null;
+		this.replayNote2 = null;
 		if (data.type == 'mine') {
 			// Reset mine.
 			this.blockEl.getObject3D('mesh').material = this.el.sceneEl.systems.materials['mineMaterial' + this.data.color];
@@ -385,12 +386,13 @@ AFRAME.registerComponent('beat', {
 				for (var i = 0; i < bombs.length; i++) {
 					if (bombs[i].time < data.time + 0.08 && bombs[i].time > data.time - 0.08) {
 						this.replayNote = bombs[i];
+						this.replayNote2 = bombs[i];
 						break;
 					}
 				}
 			}
 		} else {
-			const notes = this.replayLoader.allStructs;
+			const notes = this.replayLoader.allStructs[0];
 			const index = this.data.index;
 			var result;
 			for (var i = 0; i < notes.length; i++) {
@@ -400,10 +402,40 @@ AFRAME.registerComponent('beat', {
 				}
 			}
 			this.replayNote = result;
+			const notes2 = this.replayLoader.allStructs[1];
+			const index2 = this.data.index;
+			var result2;
+			for (var i = 0; i < notes2.length; i++) {
+				if (notes2[i].index == index2) {
+					result2 = notes2[i];
+					break;
+				}
+			}
+			this.replayNote2 = result2;
+
+			if (this.replayNote.scoreDetail&&this.replayNote2.scoreDetail){
+				//myChart.data.labels.push(index)
+				myChart.data.datasets[0].data.push(this.replayNote.scoreDetail[0]-this.replayNote2.scoreDetail[0])
+				myChart.data.datasets[1].data.push(this.replayNote.scoreDetail[1]-this.replayNote2.scoreDetail[1])
+				myChart.data.datasets[2].data.push(this.replayNote.scoreDetail[2]-this.replayNote2.scoreDetail[2])
+				if (myChart.data.datasets[0].data.length>100){
+					//myChart.data.labels.shift()
+					myChart.data.datasets[0].data.shift()
+					myChart.data.datasets[1].data.shift()
+					myChart.data.datasets[2].data.shift()
+				}
+				myChart.update()
+			}
 		}
 
 		if (this.replayNote == null) {
 			this.replayNote = {
+				score: 1,
+				totalScore: -1,
+			};
+		}
+		if (this.replayNote2 == null) {
+			this.replayNote2 = {
 				score: 1,
 				totalScore: -1,
 			};
@@ -993,6 +1025,7 @@ AFRAME.registerComponent('beat', {
 
 	showScore: function (hand) {
 		let score = this.replayNote.score;
+		let score2 = this.replayNote2.score;
 		if (score < 0) {
 			if (score == -3) {
 				var missEl = hand === 'left' ? this.missElLeft : this.missElRight;
@@ -1018,7 +1051,9 @@ AFRAME.registerComponent('beat', {
 		} else {
 			const scoreEl = this.el.sceneEl.components['pool__beatscoreok'].requestEntity();
 			const colorAndScale = this.colorAndScaleForScore(this.replayNote);
-			scoreEl.setAttribute('text', 'value', '' + score);
+			let diff = [0,0,0];
+			for (var i=0;i<3;i++) diff[i]=this.replayNote.scoreDetail[i]-this.replayNote2.scoreDetail[i];
+			scoreEl.setAttribute('text', 'value', `${score-score2}(${diff[0]},${diff[1]},${diff[2]})`);
 
 			let duration = 500 / this.song.speed;
 			if (this.settings.settings.colorScores) {
@@ -1078,7 +1113,8 @@ AFRAME.registerComponent('beat', {
 			fadeColor.setRGB(fadeJudgment.color[0], fadeJudgment.color[1], fadeJudgment.color[2]);
 
 			const resultColor = fadeColor.lerp(color, (score - fadeJudgment.threshold) / (judgment.threshold - fadeJudgment.threshold));
-			const resultScale = 1.4 - (115 - score) / 115;
+			//const resultScale = 1.4 - (115 - score) / 115;
+			const resultScale = 1.4;
 
 			return {color: '#' + resultColor.getHexString(), scale: Math.max(0.7, resultScale)};
 		};
