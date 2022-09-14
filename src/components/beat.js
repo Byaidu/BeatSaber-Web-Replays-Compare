@@ -1013,20 +1013,22 @@ AFRAME.registerComponent('beat', {
 		let score = this.replayNote.score;
 		let score2 = this.replayNote2.score;
 
-		let idx = this.data.color == 'red' ? 0 : 1;
-		console.log(this.data.color,idx)
 		if (this.replayNote.scoreDetail&&this.replayNote2.scoreDetail){
-			myChart[idx].data.datasets[0].data.push(this.replayNote.scoreDetail[0]-this.replayNote2.scoreDetail[0])
-			myChart[idx].data.datasets[1].data.push(this.replayNote.scoreDetail[1]-this.replayNote2.scoreDetail[1])
-			myChart[idx].data.datasets[2].data.push(this.replayNote.scoreDetail[2]-this.replayNote2.scoreDetail[2])
-			if (myChart[idx].data.datasets[0].data.length>50){
-				myChart[idx].data.datasets[0].data.shift()
-				myChart[idx].data.datasets[1].data.shift()
-				myChart[idx].data.datasets[2].data.shift()
+			if (this.data.color == 'red') {
+				for (var i=0;i<3;i++) {
+					myChart[0].data.datasets[i].data.push(this.replayNote.scoreDetail[i]-this.replayNote2.scoreDetail[i])
+					myChart[0].data.datasets[i].data.shift()
+				}
+				myChart[0].update()
+			} else {
+				for (var i=0;i<3;i++) {
+					myChart[1].data.datasets[i].data.unshift(this.replayNote.scoreDetail[i]-this.replayNote2.scoreDetail[i])
+					myChart[1].data.datasets[i].data.pop()
+				}
+				myChart[1].update()
 			}
-			myChart[idx].update()
 		}
-		
+
 		if (score < 0) {
 			if (score == -3) {
 				var missEl = hand === 'left' ? this.missElLeft : this.missElRight;

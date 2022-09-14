@@ -1492,26 +1492,28 @@
 <script>
   const ctx0 = document.getElementById('myChart0').getContext('2d');
   const ctx1 = document.getElementById('myChart1').getContext('2d');
-  const labels=Array.from({length: 50}, (v, i) => i);
+  const labels0=Array.from({length: 50}, (v, i) => i);
+  const labels1=Array.from({length: 50}, (v, i) => (50-i));
+  const data=Array.from({length: 50}, (v, i) => 0);
   const myChart = [null, null];
   myChart[0] = new Chart(ctx0, {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: labels0,
       datasets: [
         {
           label: 'beforeCutRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#ff000050',
         },
         {
           label: 'afterCutRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#00ff0050',
         },
         {
           label: 'cutDistanceRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#0000ff50',
         },
       ]
@@ -1542,21 +1544,21 @@
   myChart[1] = new Chart(ctx1, {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: labels1,
       datasets: [
         {
           label: 'beforeCutRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#ff000050',
         },
         {
           label: 'afterCutRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#00ff0050',
         },
         {
           label: 'cutDistanceRawScore',
-          data: [],
+          data: [...data],
           backgroundColor: '#0000ff50',
         },
       ]
