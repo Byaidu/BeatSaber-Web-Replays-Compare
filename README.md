@@ -5,6 +5,32 @@
 [A-Frame]: https://github.com/nsgolova/ngoframe
 [visit]: https://www.replay.beatleader.xyz/?id=c32d&difficulty=ExpertPlus&playerID=76561198333869741
 
+## Compare
+
+![Diff](https://user-images.githubusercontent.com/21212051/190091179-f0a7a21e-6a3b-4871-9dc6-55d12fa78fc4.png)
+
+Display saber movements of 2 players and diff score details (beforeCut, afterCut and cutDistance).
+
+Player1's Saber Color: 🟢🟢
+
+Player2's Saber Color: 🔴🔵
+
+Specify BeatLeader's scoreId using `?scoreId` and `?scoreId2`:
+
+`
+https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=[Player1]&scoreId2=[Player2]
+`
+
+For example:
+
+`
+https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=866231
+`
+
+**[Show Example](https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=866231)**
+
+## About
+
 Web-based viewer for Beat Saber replays, built with [A-Frame] and JavaScript.
 
 **[CLICK TO VIEW][visit]**
