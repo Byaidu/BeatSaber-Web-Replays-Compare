@@ -1482,14 +1482,19 @@
   </span>
 </a>
 
-<div id="myChartBox">
-<canvas id="myChart"></canvas>
-<div>
+<div id="myChartBox0">
+  <canvas id="myChart0"></canvas>
+</div>
+<div id="myChartBox1">
+  <canvas id="myChart1"></canvas>
+</div>
 
 <script>
-  const ctx = document.getElementById('myChart').getContext('2d');
-  const labels=Array.from({length: 100}, (v, i) => i);
-  const myChart = new Chart(ctx, {
+  const ctx0 = document.getElementById('myChart0').getContext('2d');
+  const ctx1 = document.getElementById('myChart1').getContext('2d');
+  const labels=Array.from({length: 50}, (v, i) => i);
+  const myChart = [null, null];
+  myChart[0] = new Chart(ctx0, {
     type: 'bar',
     data: {
       labels: labels,
@@ -1515,7 +1520,52 @@
       plugins: {
         title: {
           display: true,
-          text: 'Chart.js Bar Chart - Stacked'
+          text: 'Left'
+        },
+      },
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+        },
+        y: {
+          stacked: true,
+          min: -115,
+          max: 115,
+        }
+      },
+      animation: {
+        duration: 0,
+      }
+    }
+  });
+  myChart[1] = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'beforeCutRawScore',
+          data: [],
+          backgroundColor: '#ff000050',
+        },
+        {
+          label: 'afterCutRawScore',
+          data: [],
+          backgroundColor: '#00ff0050',
+        },
+        {
+          label: 'cutDistanceRawScore',
+          data: [],
+          backgroundColor: '#0000ff50',
+        },
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Right'
         },
       },
       responsive: true,

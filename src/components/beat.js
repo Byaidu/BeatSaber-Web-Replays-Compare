@@ -412,20 +412,6 @@ AFRAME.registerComponent('beat', {
 				}
 			}
 			this.replayNote2 = result2;
-
-			if (this.replayNote.scoreDetail&&this.replayNote2.scoreDetail){
-				//myChart.data.labels.push(index)
-				myChart.data.datasets[0].data.push(this.replayNote.scoreDetail[0]-this.replayNote2.scoreDetail[0])
-				myChart.data.datasets[1].data.push(this.replayNote.scoreDetail[1]-this.replayNote2.scoreDetail[1])
-				myChart.data.datasets[2].data.push(this.replayNote.scoreDetail[2]-this.replayNote2.scoreDetail[2])
-				if (myChart.data.datasets[0].data.length>100){
-					//myChart.data.labels.shift()
-					myChart.data.datasets[0].data.shift()
-					myChart.data.datasets[1].data.shift()
-					myChart.data.datasets[2].data.shift()
-				}
-				myChart.update()
-			}
 		}
 
 		if (this.replayNote == null) {
@@ -1026,6 +1012,21 @@ AFRAME.registerComponent('beat', {
 	showScore: function (hand) {
 		let score = this.replayNote.score;
 		let score2 = this.replayNote2.score;
+
+		let idx = this.data.color == 'red' ? 0 : 1;
+		console.log(this.data.color,idx)
+		if (this.replayNote.scoreDetail&&this.replayNote2.scoreDetail){
+			myChart[idx].data.datasets[0].data.push(this.replayNote.scoreDetail[0]-this.replayNote2.scoreDetail[0])
+			myChart[idx].data.datasets[1].data.push(this.replayNote.scoreDetail[1]-this.replayNote2.scoreDetail[1])
+			myChart[idx].data.datasets[2].data.push(this.replayNote.scoreDetail[2]-this.replayNote2.scoreDetail[2])
+			if (myChart[idx].data.datasets[0].data.length>50){
+				myChart[idx].data.datasets[0].data.shift()
+				myChart[idx].data.datasets[1].data.shift()
+				myChart[idx].data.datasets[2].data.shift()
+			}
+			myChart[idx].update()
+		}
+		
 		if (score < 0) {
 			if (score == -3) {
 				var missEl = hand === 'left' ? this.missElLeft : this.missElRight;
