@@ -1015,12 +1015,16 @@ AFRAME.registerComponent('beat', {
 
 		if (this.replayNote.scoreDetail&&this.replayNote2.scoreDetail){
 			if (this.data.color == 'red') {
+				myChart[0].data.directions.push(this.data.cutDirection)
+				myChart[0].data.directions.shift()
 				for (var i=0;i<3;i++) {
 					myChart[0].data.datasets[i].data.push(this.replayNote.scoreDetail[i]-this.replayNote2.scoreDetail[i])
 					myChart[0].data.datasets[i].data.shift()
 				}
 				myChart[0].update()
 			} else {
+				myChart[1].data.directions.unshift(this.data.cutDirection)
+				myChart[1].data.directions.pop()
 				for (var i=0;i<3;i++) {
 					myChart[1].data.datasets[i].data.unshift(this.replayNote.scoreDetail[i]-this.replayNote2.scoreDetail[i])
 					myChart[1].data.datasets[i].data.pop()

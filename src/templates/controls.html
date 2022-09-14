@@ -433,6 +433,9 @@
   const labels1=Array.from({length: 50}, (v, i) => (50-i));
   const data=Array.from({length: 50}, (v, i) => 0);
   const myChart = [null, null];
+  const footer = (idx) => {return (ctx) => {
+    return myChart[idx].data.directions[ctx[0].dataIndex]
+  }};
   myChart[0] = new Chart(ctx0, {
     type: 'bar',
     data: {
@@ -453,7 +456,8 @@
           data: [...data],
           backgroundColor: '#0000ff50',
         },
-      ]
+      ],
+      directions: [...data]
     },
     options: {
       plugins: {
@@ -475,6 +479,17 @@
       },
       animation: {
         duration: 0,
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            footer: footer(0),
+          }
+        }
       }
     }
   });
@@ -498,7 +513,8 @@
           data: [...data],
           backgroundColor: '#0000ff50',
         },
-      ]
+      ],
+      directions: [...data]
     },
     options: {
       plugins: {
@@ -520,6 +536,17 @@
       },
       animation: {
         duration: 0,
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            footer: footer(1),
+          }
+        }
       }
     }
   });

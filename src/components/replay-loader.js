@@ -1,6 +1,6 @@
 const dragDrop = require('drag-drop');
 import {checkBSOR, NoteEventType, ssReplayToBSOR} from '../open-replay-decoder';
-import {Mirror_Horizontal, Mirror_Horizontal_Note} from '../chirality-support';
+import {Mirror_Horizontal, Mirror_Horizontal_Note, Mirror_Vertical} from '../chirality-support';
 import {MultiplierCounter} from '../utils/MultiplierCounter';
 const DECODER_LINK = 'https://ssdecode.azurewebsites.net';
 
@@ -17,6 +17,8 @@ AFRAME.registerComponent('replay-loader', {
 		scoreId: {default: AFRAME.utils.getUrlParameter('scoreId')},
 		scoreId2: {default: AFRAME.utils.getUrlParameter('scoreId2')},
 	},
+
+	orientationsHumanized: ['up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright', 'any'],
 
 	init: function () {
 		this.replay = [null, null];
@@ -510,11 +512,31 @@ AFRAME.registerComponent('replay-loader', {
 			}
 		}
 		this.allStructs[index] = allStructs;
-		this.notes = noteStructs;
-		this.bombs = bombStructs;
-		this.walls = wallStructs;
 
-		this.el.sceneEl.emit('replayloaded', {notes: allStructs, replay: replay}, null);
+		if (index==0){
+			this.notes = noteStructs;
+			this.bombs = bombStructs;
+			this.walls = wallStructs;
+			let stat=[[[[],[],[]],[[],[],[]]],[[[],[],[]],[[],[],[]]],[[[],[],[]],[[],[],[]]]];
+
+			allStructs.forEach((i)=>{
+				let dir=2,color=i.colorType;
+				if (this.orientationsHumanized[i.cutDirection].includes('up')) dir=0;
+				if (this.orientationsHumanized[i.cutDirection].includes('down')) dir=1;
+				if (i.scoreDetail){
+					for (var j=0;j<3;j++) stat[dir][color][j].push(i.scoreDetail[j])
+				}
+			})
+
+			let avr = (arr) => {return (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2);}
+
+			console.log(`Left up:${avr(stat[0][0][0])},${avr(stat[0][0][1])},${avr(stat[0][0][2])} down:${avr(stat[1][0][0])},${avr(stat[1][0][1])},${avr(stat[1][0][2])}`)
+			console.log(`Right up:${avr(stat[0][1][0])},${avr(stat[0][1][1])},${avr(stat[0][1][2])} down:${avr(stat[1][1][0])},${avr(stat[1][1][1])},${avr(stat[1][1][2])}`)
+
+			this.el.sceneEl.emit('replayloaded', {notes: allStructs, replay: replay}, null);
+		}
+
+		//this.el.sceneEl.emit('replayloaded', {notes: allStructs, replay: replay}, null);
 	},
 
 	applyLeftHanded: function (map, replay) {
