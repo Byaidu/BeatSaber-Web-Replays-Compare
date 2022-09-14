@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Beat Saber web replays</title>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="assets/img/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/img/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/img/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/img/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="assets/img/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="assets/img/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="assets/img/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="assets/img/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="assets/img/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="assets/img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="assets/img/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="Beat Saber web replays"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="assets/img/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="assets/img/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="assets/img/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="assets/img/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="assets/img/mstile-310x310.png" />
+
+    <meta property="og:title" content="Beat Saber replay">
+    <meta name="twitter:title" content="Beat Saber replay">
+    <meta name="twitter:site" content="replay.beatleader.xyz">
+    <meta name="twitter:image:alt" content="Beat Saber replay">
+
+    <meta name="twitter:player:width" content="700" />
+    <meta name="twitter:player:height" content="400" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:type" content="object">
+    <meta property="og:image:width" content="700">
+    <meta property="og:image:height" content="400">
+
+    <script>
+      ["og:url", "og:video:url", "og:video:secure_url", "twitter:player"].forEach(attribute => {
+        var link = document.createElement('meta');  
+        link.setAttribute('property', attribute);   
+        link.content = document.location;  
+        document.getElementsByTagName('head')[0].appendChild(link);
+      });
+      ["twitter:image", "og:image"].forEach(attribute => {
+        var link = document.createElement('meta');  
+        link.setAttribute('property', attribute);   
+        link.content = document.location.protocol + "//" + document.location.host + "/preview.png" + window.location.search;  
+        document.getElementsByTagName('head')[0].appendChild(link);
+      });
+    </script>
+
+    <script type="text/javascript">
+      window.vrDisabled = true;
+    </script>
+    
+      <script src="vendor/aframe-master.min.js"></script>
+    
+    <script src="build/build.js"></script>
+    <script src="vendor/chart.min.js"></script>
+    <link rel="stylesheet" href="assets/img/all.css">
+  </head>
+  <body id="body" class="showControls">
+    <!-- Stage, neons, animations launched from beat-generator events. -->
+<a-mixin id="bgColorAnimation"
+  animation__bgcoloroff="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; to: #081a0f; dur: 500; easing: linear; startEvents: bgcoloroff"
+  animation__bgcolorblue="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; to: #2851b8; dur: 5; easing: linear; startEvents: bgcolorblue"
+  animation__bgcolorbluefade="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; from: #58bbed; to: #2851b8; dur: 500; easing: linear; startEvents: bgcolorbluefade"
+  animation__bgcolorred="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; to: #ff1f81; dur: 5; easing: linear; startEvents: bgcolorred"
+  animation__bgcolorredfade="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; from: #ff6bb0; to: #ff1f81; dur: 500; easing: linear; startEvents: bgcolorredfade"
+  animation__skycoloroff="isRawProperty: true; property: systems.materials.stageNormal.uniforms.skyColor.value; type: color; to: #297547; dur: 500; easing: linear; startEvents: bgcoloroff"
+  animation__skycolorblue="isRawProperty: true; property: systems.materials.stageNormal.uniforms.skyColor.value; type: color; to: #840d42; dur: 5; easing: linear; startEvents: bgcolorblue"
+  animation__skycolorred="isRawProperty: true; property: systems.materials.stageNormal.uniforms.skyColor.value; type: color; to: #154136; dur: 5; easing: linear; startEvents: bgcolorred"
+  animation__bgcolorgameover="isRawProperty: true; property: systems.materials.stageNormal.uniforms.backglowColor.value; type: color; to: #081a0f; dur: 500; easing: linear; startEvents: bgcolorgameover"
+  animation__skycolorgameover="isRawProperty: true; property: systems.materials.stageNormal.uniforms.skyColor.value; type: color; to: #840d42; dur: 5; easing: linear; startEvents: bgcolorgameover"></a-mixin>
+
+<a-mixin id="tunnelColorAnimation"
+  animation__tunnelcoloroff="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.tunnelNeon.value; type: color; to: #000; dur: 500; easing: linear; startEvents: tunnelcoloroff"
+  animation__tunnelcolorblue="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.tunnelNeon.value; type: color; to: #00708a; dur: 5; easing: linear; startEvents: tunnelcolorblue"
+  animation__tunnelcolorbluefade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.tunnelNeon.value; type: color; from: #87c2ff; to: #00708a; dur: 500; easing: linear; startEvents: tunnelcolorbluefade"
+  animation__tunnelcolorred="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.tunnelNeon.value; type: color; to: #f01978; dur: 5; easing: linear; startEvents: tunnelcolorred"
+  animation__tunnelcolorredfade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.tunnelNeon.value; type: color; from: #ff70b5; to: #f01978; dur: 500; easing: linear; startEvents: tunnelcolorredfade"></a-mixin>
+
+<a-mixin id="floorColorAnimation"
+  animation__floorcoloroff="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.floorNeon.value; type: color; to: #000; dur: 500; easing: linear; startEvents: floorcoloroff"
+  animation__floorcolorblue="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.floorNeon.value; type: color; to: #00708a; dur: 5; easing: linear; startEvents: floorcolorblue"
+  animation__floorcolorbluefade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.floorNeon.value; type: color; from: #87c2ff; to: #00708a; dur: 500; easing: linear; startEvents: floorcolorbluefade"
+  animation__floorcolorred="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.floorNeon.value; type: color; to: #f01978; dur: 5; easing: linear; startEvents: floorcolorred"
+  animation__floorcolorredfade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.floorNeon.value; type: color; from: #ff70b5; to: #f01978; dur: 500; easing: linear; startEvents: floorcolorredfade"></a-mixin>
+
+<a-mixin id="leftLaserColorAnimation"
+  animation__leftlasercoloroff="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.leftLaser.value; type: color; to: #000; dur: 500; easing: linear; startEvents: leftlasercoloroff"
+  animation__leftlasercolorblue="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.leftLaser.value; type: color; to: #00708a; dur: 5; easing: linear; startEvents: leftlasercolorblue"
+  animation__leftlasercolorbluefade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.leftLaser.value; type: color; from: #87c2ff; to: #00708a; dur: 500; easing: linear; startEvents: leftlasercolorbluefade"
+  animation__leftlasercolorred="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.leftLaser.value; type: color; to: #f01978; dur: 5; easing: linear; startEvents: leftlasercolorred"
+  animation__leftlasercolorredfade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.leftLaser.value; type: color; from: #ff70b5; to: #f01978; dur: 500; easing: linear; startEvents: leftlasercolorredfade"></a-mixin>
+
+<a-mixin id="rightLaserColorAnimation"
+  animation__rightlasercoloroff="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.rightLaser.value; type: color; to: #000; dur: 500; easing: linear; startEvents: rightlasercoloroff"
+  animation__rightlasercolorblue="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.rightLaser.value; type: color; to: #00708a; dur: 5; easing: linear; startEvents: rightlasercolorblue"
+  animation__rightlasercolorbluefade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.rightLaser.value; type: color; from: #87c2ff; to: #00708a; dur: 500; easing: linear; startEvents: rightlasercolorbluefade"
+  animation__rightlasercolorred="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.rightLaser.value; type: color; to: #f01978; dur: 5; easing: linear; startEvents: rightlasercolorred"
+  animation__rightlasercolorredfade="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.rightLaser.value; type: color; from: #ff70b5; to: #f01978; dur: 500; easing: linear; startEvents: rightlasercolorredfade"></a-mixin>
+
+<a-mixin id="textGlowColorAnimation"
+  animation__textglowoff="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.textGlow.value; type: color; to: #000; dur: 5; easing: easeInOutCubic; startEvents: textglowoff"
+  animation__textglownormal="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.textGlow.value; type: color; to: #444; dur: 750; easing: easeInOutCubic; delay: 100; startEvents: textglownormal"
+  animation__textglowbold="isRawProperty: true; property: systems.materials.stageAdditive.uniforms.textGlow.value; type: color; from: #888; to: #444; dur: 500; easing: easeInOutCubic; startEvents: textglowbold"
+  ></a-mixin>
+    <a-scene
+      settings
+      bind__pixelRatio="settings.pixelRatio"
+      precision="mediump"
+      mixin="bgColorAnimation tunnelColorAnimation leftLaserColorAnimation rightLaserColorAnimation textGlowColorAnimation floorColorAnimation"
+      bind__beat-generator="difficulty: challenge.difficulty; mode: challenge.mode; isPlaying: isPlaying; beatSpeed: challenge.beatSpeed; noEffects: settings.noEffects"
+      bind__pauser="enabled: isPlaying"
+      bind__song="audio: challenge.audio; difficulty: challenge.difficulty; mode: challenge.mode; isPaused: isPaused; isFinished: isFinished; isPlaying: isPlaying; hasReceivedUserGesture: hasReceivedUserGesture; isBeatsPreloaded: challenge.isBeatsPreloaded"
+      bind__song-controls="difficulty: challenge.difficulty; mode: challenge.mode; isSafari: isSafari; isPlaying: isPlaying; songName: challenge.songName; songSubName: challenge.author; songImage: challenge.image; showControls: showControls; leaderboardId: challenge.leaderboardId; songId: challenge.id"
+      bind__zip-loader="difficulty: challenge.difficulty; id: challenge.id; mode: challenge.mode"
+      bind__replay-loader="difficulty: challenge.difficulty; mode: challenge.mode"
+      bind__intro-skip="difficulty: challenge.difficulty"
+      bind__fps-counter="enabled: settings.showFps"
+      console-shortcuts
+      debug-controller
+      debug-song-time
+      debug-state
+      hack
+      gpu-preloader
+      
+        inspector="url: https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js"
+      
+      iframe-url
+      loading-screen="backgroundColor: #000;"
+      pool__beat-arrow-blue="mixin: arrowBlueBeat; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-arrow-red="mixin: arrowRedBeat; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-dot-blue="mixin: dotBlueBeat; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-dot-red="mixin: dotRedBeat; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-sliderhead-blue="mixin: blueHead; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-sliderhead-red="mixin: redHead; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-sliderchain-blue="mixin: blueChain; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-sliderchain-red="mixin: redChain; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-mine="mixin: mine; size: 50; container: #beatContainer; dynamic: true"
+      pool__beat-glow="mixin: beatGlow; size: 20; container: #glowContainer; dynamic: true"
+      pool__beatscoreok="mixin: beatScoreOk; size: 30; container: #beatContainer; dynamic: true"
+      pool__beatscoresuper="mixin: beatScoreSuper; size: 10; container: #beatContainer; dynamic: true"
+      pool__wall="mixin: wall; size: 30; container: #beatContainer"
+      pool__slider-blue="mixin: slider; size: 50; container: #beatContainer; dynamic: true"
+      pool__slider-red="mixin: slider; size: 50; container: #beatContainer; dynamic: true"
+      proxy-event__cleargame="event: gamemenurestart; as: cleargame; to: a-scene"
+      proxy-event__pausegame="event: pausegame; as: textglowoff; to: a-scene"
+      proxy-event__resumegame="event: gamemenuresume; as: textglownormal; to: a-scene"
+      stage-colors="color: blue"
+      stats-param
+      user-gesture
+      replay-loader
+      replay-player
+      replay-info-ui
+      camera-mover
+      fps-counter
+      intro-skip
+      render-order="background, additive, middle, hud, walls, splines">
+
+      <a-assets timeout="10000">
+        <a-asset-item id="arrowObj" src="assets/models/arrow.obj"></a-asset-item>
+<a-asset-item id="arrowredObj" src="assets/models/arrowred.obj"></a-asset-item>
+<a-asset-item id="arrowblueObj" src="assets/models/arrowblue.obj"></a-asset-item>
+<a-asset-item id="dotredObj" src="assets/models/dotred.obj"></a-asset-item>
+<a-asset-item id="dotblueObj" src="assets/models/dotblue.obj"></a-asset-item>
+<a-asset-item id="backglowObj" src="assets/models/backglow.obj"></a-asset-item>
+<a-asset-item id="beatObj" src="assets/models/beat.obj"></a-asset-item>
+<a-asset-item id="sliderheadObj" src="assets/models/sliderhead.obj"></a-asset-item>
+<a-asset-item id="sliderchainObj" src="assets/models/sliderchain.obj"></a-asset-item>
+<a-asset-item id="missObj" src="assets/models/miss.obj"></a-asset-item>
+<a-asset-item id="wrongObj" src="assets/models/wrong.obj"></a-asset-item>
+<a-asset-item id="questObj" src="assets/models/quest.obj"></a-asset-item>
+<a-asset-item id="laserObj" src="assets/models/laser/laser.obj"></a-asset-item>
+<a-asset-item id="sparksJSON" src="assets/models/sparks.json"></a-asset-item>
+<a-asset-item id="mineObj" src="assets/models/mine.obj"></a-asset-item>
+<a-asset-item id="mineBrokenObj" src="assets/models/minebroken.obj"></a-asset-item>
+<a-asset-item id="mineParticlesJSON" src="assets/models/mineparticles.json"></a-asset-item>
+<a-asset-item id="saberParticlesJSON" src="assets/models/sabercut.json"></a-asset-item>
+<a-asset-item id="stageNormalObj" src="assets/models/stagenormal.obj"></a-asset-item>
+<a-asset-item id="stageAdditiveObj" src="assets/models/stageadditive.obj"></a-asset-item>
+<a-asset-item id="smokeObj" src="assets/models/smoke.obj"></a-asset-item>
+<a-asset-item id="audiocolumnObj" src="assets/models/audiocolumn.obj"></a-asset-item>
+<a-asset-item id="leftLaserObj" src="assets/models/leftlaser.obj"></a-asset-item>
+<a-asset-item id="rightLaserObj" src="assets/models/rightlaser.obj"></a-asset-item>
+<a-asset-item id="redbeamObj" src="assets/models/redbeam.obj"></a-asset-item>
+<a-asset-item id="bluebeamObj" src="assets/models/bluebeam.obj"></a-asset-item>
+<a-asset-item id="saberGlowObj" src="assets/models/saberglow.obj"></a-asset-item>
+
+<audio id="hoverSound" src="assets/sounds/hover.wav"></audio>
+
+
+<audio id="hitSound1" src="assets/sounds/hit1.wav"></audio>
+<audio id="hitSound1left" src="assets/sounds/hit1left.wav"></audio>
+<audio id="hitSound1right" src="assets/sounds/hit1right.wav"></audio>
+
+<audio id="hitSound2" src="assets/sounds/hit2.wav"></audio>
+<audio id="hitSound2left" src="assets/sounds/hit2left.wav"></audio>
+<audio id="hitSound2right" src="assets/sounds/hit2right.wav"></audio>
+
+<audio id="hitSound3" src="assets/sounds/hit3.wav"></audio>
+<audio id="hitSound3left" src="assets/sounds/hit3left.wav"></audio>
+<audio id="hitSound3right" src="assets/sounds/hit3right.wav"></audio>
+
+<audio id="hitSound4" src="assets/sounds/hit4.wav"></audio>
+<audio id="hitSound4left" src="assets/sounds/hit4left.wav"></audio>
+<audio id="hitSound4right" src="assets/sounds/hit4right.wav"></audio>
+
+<audio id="hitSound5" src="assets/sounds/hit5.wav"></audio>
+<audio id="hitSound5left" src="assets/sounds/hit5left.wav"></audio>
+<audio id="hitSound5right" src="assets/sounds/hit5right.wav"></audio>
+
+<audio id="hitSound6" src="assets/sounds/hit6.wav"></audio>
+<audio id="hitSound6left" src="assets/sounds/hit6left.wav"></audio>
+<audio id="hitSound6right" src="assets/sounds/hit6right.wav"></audio>
+
+<audio id="hitSound7" src="assets/sounds/hit7.wav"></audio>
+<audio id="hitSound7left" src="assets/sounds/hit7left.wav"></audio>
+<audio id="hitSound7right" src="assets/sounds/hit7right.wav"></audio>
+
+<audio id="hitSound8" src="assets/sounds/hit8.wav"></audio>
+<audio id="hitSound8left" src="assets/sounds/hit8left.wav"></audio>
+<audio id="hitSound8right" src="assets/sounds/hit8right.wav"></audio>
+
+<audio id="hitSound9" src="assets/sounds/hit9.wav"></audio>
+<audio id="hitSound9left" src="assets/sounds/hit9left.wav"></audio>
+<audio id="hitSound9right" src="assets/sounds/hit9right.wav"></audio>
+
+<audio id="hitSound10" src="assets/sounds/hit10.wav"></audio>
+<audio id="hitSound10left" src="assets/sounds/hit10left.wav"></audio>
+<audio id="hitSound10right" src="assets/sounds/hit10right.wav"></audio>
+
+
+<img id="cursorMeshImg" src="assets/models/laser/laser.png">
+<img id="envmapTexture" src="assets/img/envmap.jpg">
+<img id="mineTexture" src="assets/img/mineenviro-red.jpg">
+<img id="neonImg" src="assets/img/neon.png">
+<img id="sliceImg" src="assets/img/slice.png">
+<img id="slicebtnImg" src="assets/img/slicebtn.png">
+<img id="sparkImg" src="assets/img/spark.png">
+<img id="spark2Img" src="assets/img/spark2.png">
+<img id="floorEnvImg" src="assets/img/floorenv.jpg">
+<img id="floorNormalsImg" src="assets/img/floornormals.png">
+<img id="atlasImg" src="assets/img/atlas.png">
+<img id="glowImg" src="assets/img/glow.png">
+<img id="wrongImg" src="assets/img/wrong.png">
+<img id="missImg" src="assets/img/miss.png">
+<img id="favicon" src="assets/img/favicon-196x196.png">
+
+<a-mixin id="slice" slice9="color: #050505; transparent: true; opacity: 0.9; src: #sliceImg; left: 50; right: 52; top: 50; bottom: 52; padding: 0.18"></a-mixin>
+<a-mixin id="font" text="font: assets/fonts/Teko-Bold.json; shader: msdf; letterSpacing: 1"></a-mixin>
+
+<a-mixin id="beat" visible="false"></a-mixin>
+<a-mixin id="beatBlock"></a-mixin>
+<a-mixin id="beatSign"></a-mixin>
+<a-mixin id="arrowBlueBeat" mixin="beat" beat="color: blue; type: arrow"></a-mixin>
+<a-mixin id="arrowRedBeat" mixin="beat" beat="color: red; type: arrow"></a-mixin>
+<a-mixin id="dotBlueBeat" mixin="beat" beat="color: blue; type: dot"></a-mixin>
+<a-mixin id="dotRedBeat" mixin="beat" beat="color: red; type: dot"></a-mixin>
+<a-mixin id="redHead" mixin="beat" beat="color: red; type: sliderhead"></a-mixin>
+<a-mixin id="blueHead" mixin="beat" beat="color: blue; type: sliderhead"></a-mixin>
+<a-mixin id="redChain" mixin="beat" beat="color: red; type: sliderchain"></a-mixin>
+<a-mixin id="blueChain" mixin="beat" beat="color: blue; type: sliderchain"></a-mixin>
+<a-mixin id="mine" mixin="beat" beat="type: mine"></a-mixin>
+
+<a-mixin
+  id="beatScore"
+  render-order="hud"
+  material="shader: flat; transparent: true; depthWrite: false;"
+  mixin="font"
+  text="opacity: 0; wrapCount: 19; color: #FFF; width: 1.5"
+  animation__opacityin="property: components.text.material.uniforms.opacity.value; from: .5; to: 1; dur: 500; startEvents: beatscorestart"
+  animation__opacityout="property: components.text.material.uniforms.opacity.value; from: 1; to: 0; dur: 500; delay: 700; startEvents: beatscorestart"
+  animation__motionz="property: object3D.position.z; to: -6; dur: 500; easing: linear; startEvents: beatscorestart"
+  animation__motiony="property: object3D.position.y; to: 0.1; dur: 500; easing: easeOutQuart; startEvents: beatscorestart"
+></a-mixin>
+
+<a-mixin
+  id="beatScoreOk"
+  score-beat="type: ok"
+  mixin="beatScore"></a-mixin>
+<a-mixin
+  id="beatScoreGood"
+  score-beat="type: good"
+  mixin="beatScore"
+  text="value: GOOD; color: #A8E3FF"></a-mixin>
+<a-mixin
+  id="beatScoreGreat"
+  score-beat="type: great"
+  mixin="beatScore"
+  text="value: GREAT; wrapCount: 16; color: #60CCFF"></a-mixin>
+<a-mixin
+  id="beatScoreSuper"
+  score-beat="type: super"
+  mixin="beatScore"
+  text="value: SUPER!; wrapCount: 13; color: #00acfc"></a-mixin>
+
+<a-mixin
+  id="superCut"
+  supercutfx
+  geometry="primitive: plane; width: 3; height: 3"
+  material="shader: superCutFxShader; transparent: true; depthWrite: false"></a-mixin>
+
+<a-mixin
+  id="beatWrong"
+  obj-model="obj: #wrongObj"
+  material="shader: flat; transparent: true; depthWrite: false; src: #atlasImg"
+  visible="false"
+  animation__posz="property: object3D.position.z; to: -8; startEvents: beatwrong; easing: easeOutQuart; dur: 4000"
+  animation__alpha="property: components.material.material.opacity; from: 1; to: 0; startEvents: beatwrong; easing: easeOutQuart; dur: 4000"></a-mixin>
+
+<a-mixin id="beatMiss"
+  obj-model="obj: #missObj"
+  material="shader: flat; transparent: true; depthWrite: false; src: #atlasImg"
+  visible="false"
+  animation__posz="property: object3D.position.z; to: -8; startEvents: beatmiss; easing: easeOutQuart; dur: 4000"
+  animation__alpha="property: components.material.material.opacity; from: 1; to: 0; startEvents: beatmiss; easing: easeOutQuart; dur: 4000"></a-mixin>
+
+<a-mixin
+  id="beatGlow"
+  geometry="primitive: plane; width: 0.7; height: 0.7"
+  material="shader: flat; fog: false; blending: additive; depthWrite: false; depthTest: false; transparent: true; src: #glowImg; opacity: 1"
+  animation__opacity="property: components.material.material.opacity; from: 0.9; to: 0; dur: 300; easing: linear; startEvents: explode"
+  animation__scale="property: scale; from: 0.5 0.5 1; to: 1.5 1.5 1; dur: 300; easing: easeOutQuad; startEvents: explode"></a-mixin>
+
+<a-mixin
+  id="wall"
+  render-order="walls"
+  geometry
+  material="shader: wallShader; transparent: true; depthWrite: false; side: double;"
+  position="0 0 1000"
+  wall></a-mixin>
+
+<a-mixin
+  id="slider"
+  render-order="splines"
+  slider></a-mixin>
+
+<a-mixin
+  id="bigMenuButton"
+  mixin="slice"
+  slice9="src: #slicebtnImg; color: #CCC; width: 1; right:  52;  bottom:  47; left: 77; top: 73; height: 0.22; padding: 0.1"
+  animation__mouseenter1="property: components.slice9.material.color; type: color; from: #CCC; to: #FFF; startEvents: mouseenter; pauseEvents: mouseleave; dur: 150"
+  animation__mouseleave1="property: components.slice9.material.color; type: color; from: #FFF; to: #CCC; startEvents: mouseleave; pauseEvents: mouseenter; dur: 150"
+  animation__mouseenter2="property: scale; from: 1 1 1; to: 1.04 1.04 1.04; startEvents: mouseenter; pauseEvents: mouseleave; dur: 80"
+  animation__mouseleave2="property: scale; to: 1 1 1; from: 1.04 1.04 1.04; startEvents: mouseleave; pauseEvents: mouseenter; dur: 80"></a-mixin>
+
+      </a-assets>
+
+      <a-entity id="beatObjTemplate" obj-model="obj: #beatObj" visible="false"></a-entity>
+      <a-entity id="sliderheadObjTemplate" obj-model="obj: #sliderheadObj" visible="false"></a-entity>
+      <a-entity id="sliderchainObjTemplate" obj-model="obj: #sliderchainObj" visible="false"></a-entity>
+      <a-entity id="arrowRedObjTemplate" obj-model="obj: #arrowredObj" visible="false"></a-entity>
+      <a-entity id="arrowBlueObjTemplate" obj-model="obj: #arrowblueObj" visible="false"></a-entity>
+      <a-entity id="dotRedObjTemplate" obj-model="obj: #dotredObj" visible="false"></a-entity>
+      <a-entity id="dotBlueObjTemplate" obj-model="obj: #dotblueObj" visible="false"></a-entity>
+      <a-entity id="mineObjTemplate" obj-model="obj: #mineObj" visible="false"></a-entity>
+
+      <a-entity 
+        id="beatContainer" 
+        bind__pause="isPaused: !isPlaying" 
+        beat-hit-sound></a-entity>
+
+      <a-entity
+        id="audioAnalyser"
+        audioanalyser="src: #introSong; fftSize: 64; enableBeatDetection: true; enableLevels: false; enableWaveform: false; beatDetectionThrottle: 5000; unique: true"
+        bind__audioanalyser="beatDetectionThrottle: menuActive && 5000 || 1000; isSafari: isSafari"
+        proxy-event="event: audioanalyserbeat; to: #logolight"></a-entity>
+
+      <a-entity id="stage">
+  <a-entity
+    id="audioColumns"
+    bind__visible="!settings.noEffects"
+    audio-columns="analyser: #audioAnalyser; height: 28; mirror: 18; scale: 9; thickness: 0.6; separation: 0.55"
+    position="0 -19 5"></a-entity>
+
+  <a-entity id="twister" position="0 0 -35" rotation="90 0 0" bind__twister="enabled: isPlaying && !settings.noEffects"></a-entity>
+
+  <a-entity position="0 -1 0">
+    <a-entity render-order="background" id="stageObj" obj-model="obj: #stageNormalObj" materials="name: stageNormal"></a-entity>
+
+    <!-- Lasers left. -->
+    <a-entity
+      render-order="middle"
+      id="leftStageLasers" 
+      bind__stage-lasers="enabled: isPlaying && !settings.noEffects"
+      bind__visible="!settings.noEffects">
+      <a-entity obj-model="obj: #leftLaserObj" materials="name: stageAdditive" position="-6 2.3 -41"></a-entity>
+      <a-entity obj-model="obj: #leftLaserObj" materials="name: stageAdditive" position="-10 0 -40"></a-entity>
+      <a-entity obj-model="obj: #leftLaserObj" materials="name: stageAdditive" position="-14 -3 -39"></a-entity>
+    </a-entity>
+
+    <!-- Lasers right. -->
+    <a-entity id="rightStageLasers"
+      render-order="middle"
+      bind__stage-lasers="enabled: isPlaying && !settings.noEffects"
+      bind__visible="!settings.noEffects">
+      <a-entity obj-model="obj: #rightLaserObj" materials="name: stageAdditive" position="6 4 -38"></a-entity>
+      <a-entity obj-model="obj: #rightLaserObj" materials="name: stageAdditive" position="10 2 -37"></a-entity>
+      <a-entity obj-model="obj: #rightLaserObj" materials="name: stageAdditive" position="14 -1.5 -36"></a-entity>
+    </a-entity>
+
+    <a-entity
+      render-order="additive"
+      id="stageadditiveobj"
+      obj-model="obj: #stageAdditiveObj"
+      materials="name: stageAdditive"></a-entity>
+  </a-entity>
+
+  <a-entity render-order="walls" id="beams" bind__beams="isPlaying: isPlaying"></a-entity>
+
+  <a-entity
+    id="smoke"
+    bind__visible="!settings.noEffects"
+    animation__rotate="property: rotation; to: 0 360 0; easing: linear; loop: true; dur: 200000"
+    obj-model="obj: #smokeObj"
+    material="src: #atlasImg; shader: flat; transparent: true; depthWrite: false"
+    position="0 1.4 0"></a-entity>
+
+  <a-entity light="type: directional; intensity: 3" position="0 10 10"></a-entity>
+
+  <a-entity
+    id="floor"
+    data-saber-particles
+    geometry="primitive: plane; width: 3; height: 3"
+    rotation="-90 0 0"
+    material="shader: floorShader; normalMap: #floorNormalsImg; envMap: #floorEnvImg; hitLeft: -999 0 0; hitRight: -999 0 0"
+    raycastable-game></a-entity>
+</a-entity>
+
+      <a-mixin
+  id="gameMenuButton"
+  render-order="hud"
+  mixin="bigMenuButton"
+  animation__mouseenter="property: components.slice9.material.color; type: color; from: #CCC; to: #FAFAFA; startEvents: mouseenter; pauseEvents: mouseleave; dur: 150"
+  animation__mouseleave="property: components.slice9.material.color; type: color; from: #FAFAFA; to: #CCC; startEvents: mouseleave; pauseEvents: mouseenter; dur: 150"
+  slice9="width: 1; height: 0.27;"></a-mixin>
+
+<a-mixin
+  render-order="hud"  
+  id="gameMenuButtonText"
+  mixin="font"
+  position="0 -0.08 0.01"
+  text="align: center; wrapCount: 17; color: #FFF"></a-mixin>
+
+<!-- Titles. -->
+<a-entity 
+  id="inGameMenuTitles"
+  render-order="hud"
+  position="0 1.7 -2.3">
+    <a-entity mixin="gameMenuButtonText" text="value: PAUSED; color: #FAFAFA; width: 4" visible="false"></a-entity>
+    <a-entity mixin="gameMenuButtonText" text="value: THE END; color: #FAFAFA; width: 4" bind__visible="isFinished"></a-entity>
+</a-entity>
+
+<a-entity
+  id="gameMenu"
+  render-order="hud"
+  visible="false"
+  position="0 1.1 -2"
+  play-sound="event: mouseenter; sound: #hoverSound"
+  bind__play-sound="volume: settings.volume * 0.1">
+
+  <!-- Actions. -->
+  <a-entity
+    id="resumeButton"
+    render-order="hud"
+    mixin="gameMenuButton"
+    visible="false"
+    position="0 0.35 0"
+    proxy-event="event: click; to: a-scene; as: gamemenuresume">
+    <a-entity mixin="gameMenuButtonText" text="value: RESUME"></a-entity>
+  </a-entity>
+
+  <a-entity
+    id="restartButton"
+    render-order="hud"
+    mixin="gameMenuButton"
+    visible="false"
+    proxy-event="event: click; to: a-scene; as: gamemenurestart">
+    <a-entity mixin="gameMenuButtonText" text="value: RESTART SONG"></a-entity>
+  </a-entity>
+</a-entity>
+
+      <a-mixin
+  render-order="hud"
+  id="scoreText"
+  mixin="font"
+  text="color: #FFF; letterSpacing: -2; align: center"></a-mixin>
+
+<a-entity
+  id="scoreContainer"
+  bind__score-texts="isSongLoading: isSongLoading"
+  bind__visible="isPlaying || isPaused">
+
+  <a-entity id="scoreTextContainer" position="1.8 0.3 -4">
+    <a-entity
+      id="score"
+      mixin="scoreText"
+      bind__text="value: score.scoreDescription"
+      text="width: 4; color: #FAFAFA">
+    </a-entity>
+  </a-entity>
+
+  <a-entity id="fpsTextContainer" position="1.8 2.0 -4">
+    <a-entity
+      id="fps"
+      mixin="scoreText"
+      bind__visible="settings.showFps"
+      text="width: 4; color: #FAFAFA">
+    </a-entity>
+  </a-entity>
+
+  <a-entity
+    id="misses"
+    mixin="scoreText"
+    bind__text="value: 'Misses\n' + score.misses"
+    text="width: 1; lineHeight: 40"
+    position="-1.8 2.0 -4"
+    bind__visible="score.misses > 0"
+    scale="5 5 5">
+  </a-entity>
+
+  <a-entity
+    id="combo"
+    mixin="scoreText"
+    bind__text="value: 'COMBO\n' + score.combo"
+    text="width: 1; lineHeight: 40"
+    position="-1.8 1.2 -4"
+    scale="5 5 5">
+  </a-entity>
+
+  <a-entity
+    id="accuracy"
+    mixin="scoreText"
+    bind__text="value: score.accuracy"
+    text="width: 1; lineHeight: 40"
+    position="-1.8 0.3 -4"
+    scale="5 5 5">
+  </a-entity>
+
+  <a-entity
+      id="energyBar"
+      render-order="hud"
+      bind__energy-bar="enabled: isPlaying && challenge.isBeatsPreloaded; energy: score.energy"
+      geometry="primitive: plane; width: 1.5; height: 0.05"
+      material="shader: energy; progress: 0; transparent: true; depthWrite: false; color: #ABABAB"
+      position="0 -0.2 -4"></a-entity>
+
+  <a-entity 
+    render-order="hud"
+    position="1.8 1.2 -4">
+    <a-entity
+      id="multiplier"
+      mixin="scoreText"
+      bind__text="value: score.multiplier + 'x'"
+      text="width: 1"
+      scale="5 5 5">
+    </a-entity>
+
+   <a-entity
+      render-order="hud"
+      id="multiplierRing"
+      bind__multiplier-ring="combo: score.combo; multiplier: score.multiplier"
+      geometry="primitive: plane; width: 0.5; height: 0.5"
+      material="shader: ring; transparent: true; depthWrite: false; color: #88A; radiusInner: 0.7; progress: 0"
+      position="0 0.17 0"></a-entity>
+  </a-entity>
+</a-entity>
+
+      <a-entity
+  id="loadingSongInfoContainer"
+  render-order="hud"
+  bind__visible="challenge.isLoading || replay.isLoading || !hasReceivedUserGesture || challenge.hasLoadError || replay.hasError || localReplay"
+  position="0 1.5 -1">
+
+  <a-entity mixin="slice" slice9="opacity: 0.9; width: 0.77; height: 1; padding: 0.08" position="0 -0.02 -0.03"></a-entity>
+
+  <a-entity id="loadingSongImage"
+    bind__blob-texture="src: challenge.image"
+    geometry="primitive: plane; buffer: false; skipCache: true; height: 0.3; width: 0.3"
+    material="shader: flat; transparent: true; depthWrite: false"
+    position="0 0.24 0"
+    bind__visible="!!challenge.image && !challenge.hasLoadError"></a-entity>
+
+  <a-entity id="loadingSongImage"
+    geometry="primitive: plane; buffer: false; skipCache: true; height: 0.3; width: 0.3"
+    material="shader: flat; transparent: true; depthWrite: false; src: #favicon"
+    position="0 0.24 0"
+    bind__visible="!challenge.image || challenge.hasLoadError"></a-entity>
+
+  <a-entity id="loadingSongInfo">
+    <a-entity position="0 -0.05 0" mixin="font"
+      text="wrapCount: 40; align: center; color: #FF185B"
+      bind__text="value: challenge.author"></a-entity>
+    <a-entity position="0 -0.13 0"
+      mixin="font" text="align: center; color: #FFF; wrapCount: 21; baseline: top; lineHeight: 36; width: 0.81"
+      bind__text="value: challenge.songNameShort"></a-entity>
+
+    <a-entity
+      id="loadingText"
+      mixin="font"
+      bind__text="value: isSongBufferProcessing && 'Processing audio...' || challenge.isLoading && 'Downloading song...' || 'Downloading replay...'"
+      bind__visible="challenge.isLoading || replay.isLoading || isSongBufferProcessing && !challenge.hasLoadError"
+      text="align: center; color: #FAFAFA; wrapCount: 18; width: 0.65"
+      position="0 -0.32 0.001"></a-entity>
+
+    <a-entity
+      id="loadingErrorText"
+      mixin="font"
+      bind__text="value: challenge.hasLoadError && challenge.loadErrorText || replay.errorText"
+      bind__visible="!challenge.isLoading && !replay.isLoading && !isSongBufferProcessing && (challenge.hasLoadError || replay.hasError)"
+      text="align: center; color: #FAFAFA; wrapCount: 18; width: 0.65"
+      position="0 -0.34 0.001"></a-entity>
+
+    <a-entity
+      id="challengeLoadingIndicator"
+      bind__visible="challenge.isLoading || isSongBufferProcessing"
+      geometry="primitive: plane; height: 0.1; width: 0.1"
+      material="shader: ring; color: #FAFAFA; radiusInner: 0.2; radiusOuter: 0.9; progress: 0; transparent: true; depthWrite: false"
+      position="0 -0.38 0.002"
+      visible="false">
+    </a-entity>
+
+    <a-entity
+      id="songProcessingIndicator"
+      bind__animation__spin="enabled: isSongBufferProcessing"
+      bind__visible="isSongBufferProcessing"
+      animation__spin="property: object3D.rotation.z; from: 0; to: -360; easing: linear; dur: 1000; loop: true"
+      geometry="primitive: plane; height: 0.2; width: 0.2"
+      material="shader: ring; color: #ABABAB; radiusInner: 0.2; radiusOuter: 0.4; transparent: true; progress: 0.2; depthWrite: false"
+      position="0 -0.38 0.004"
+      visible="false">
+    </a-entity>
+
+    <a-entity
+      id="loadingText"
+      mixin="font"
+      bind__text="value: replay.hasError && 'Try another file' || 'BeatSaber replay viewer'"
+      bind__visible="localReplay"
+      text="align: center; color: #FAFAFA; wrapCount: 18; width: 0.65"
+      position="0 -0.1 0.001"></a-entity>
+
+    <a-entity
+      id="loadingGestureButton"
+      mixin="bigMenuButton"
+      bind__visible-raycastable="!challenge.isLoading && !replay.isLoading && !isPlaying && !isPaused && (!hasReceivedUserGesture || localReplay) && !isSongBufferProcessing && !challenge.hasLoadError && !replay.hasError"
+      position="0 -0.31923 0.01"
+      proxy-event="event: click; to: a-scene; as: usergesturereceive"
+      slice9="width: 0.725"
+      visible="false">
+      <a-entity 
+        id="loadingGestureText" 
+        mixin="font" 
+        text="align: center; color: #FAFAFA; wrapCount: 40; value: CLICK ANYWHERE TO PLAY"
+        bind__visible="!localReplay"
+        position="0 -0.0329 0.001">
+      </a-entity>
+      <a-entity 
+        id="loadingGestureText2" 
+        mixin="font" 
+        text="align: center; color: #FAFAFA; wrapCount: 40; value: DROP YOUR REPLAY HERE"
+        bind__visible="localReplay"
+        position="0 -0.0329 0.001">
+      </a-entity>
+
+      <a-entity 
+        id="loadingGestureText3" 
+        mixin="font" 
+        text="align: center; color: #FAFAFA; wrapCount: 40; value: Click anywhere for the open dialog"
+        bind__visible="localReplay"
+        position="0 0 2">
+      </a-entity>
+    </a-entity>
+  </a-entity>
+</a-entity>
+
+<a-entity 
+  mixin="beat" 
+  bind__beat="animating: challenge.isLoading || replay.isLoading; visible: challenge.isLoading || replay.isLoading || !hasReceivedUserGesture || challenge.hasLoadError || replay.hasError"
+  beat="color: blue; type: arrow; loadingCube: true" 
+  position="1.0 1.5 -1.0" 
+  bind__visible="challenge.isLoading || replay.isLoading || !hasReceivedUserGesture || challenge.hasLoadError || replay.hasError || localReplay"></a-entity>
+
+<a-entity 
+  mixin="beat"
+  bind__beat="animating: challenge.isLoading || replay.isLoading; visible: challenge.isLoading || replay.isLoading || !hasReceivedUserGesture || challenge.hasLoadError || replay.hasError"
+  beat="color: red; type: arrow; loadingCube: true" 
+  position="-1.0 1.5 -1.0" 
+  bind__visible="challenge.isLoading || replay.isLoading || !hasReceivedUserGesture || challenge.hasLoadError || replay.hasError || localReplay"></a-entity>
+
+
+      <a-entity id="glowContainer"></a-entity>
+
+      <!-- super cut fx rings -->
+      
+        <a-entity render-order="wall" class="superCutFx" mixin="superCut"></a-entity>
+      
+        <a-entity render-order="wall" class="superCutFx" mixin="superCut"></a-entity>
+      
+        <a-entity render-order="wall" class="superCutFx" mixin="superCut"></a-entity>
+      
+        <a-entity render-order="wall" class="superCutFx" mixin="superCut"></a-entity>
+      
+
+      <!-- Wrong + miss beat visual indicators. -->
+      <a-entity id="badContainer" bind__visible="isPlaying">
+        <a-entity render-order="walls" id="wrongLeft" mixin='beatWrong'></a-entity>
+        <a-entity render-order="walls" id="wrongRight" mixin='beatWrong'></a-entity>
+        <a-entity render-order="walls" id="missLeft" mixin='beatMiss'></a-entity>
+        <a-entity render-order="walls" id="missRight" mixin='beatMiss'></a-entity>
+      </a-entity>
+
+      <a-entity
+        render-order="wall"
+        id="saberParticles"
+        particleplayer="src: #saberParticlesJSON; interpolate: true; pscale: 0.55; dur: 800; loop: false; on: explode; img: #sparkImg; count: 20%; animateScale: true; initialScale: 4 1 1; finalScale: 0.2 0.2 1"></a-entity>
+      <a-entity
+        render-order="wall"
+        id="mineParticles"
+        particleplayer="src: #mineParticlesJSON; pscale: 0.5; interpolate: true; scale: 1.4; loop: false; on: explode; img: #sparkImg; count: 20%; animateScale: true; initialScale: 3 1 1; finalScale: 0.2 0.2 1"></a-entity>
+      <a-entity
+        render-order="wall"
+        id="sparkParticles"
+        particleplayer="src: #sparksJSON; color: #fcc; pscale: 0.5; on: explode; scale: 0.12; loop: false; img: #spark2Img; dur: 700; count: 50%; animateScale: true; initialScale: 3 0.5 1; finalScale: 0.1 0.5 1"></a-entity>
+
+      <a-entity
+        id="controllerRig"
+        proxy-event="event: recentered; to: #headRig; captureBubbles: true; as: recenter">
+        
+
+        
+          <a-entity id="leftHand"
+            render-order="wall"
+            class="saber"
+            bind__pauser="enabled: isPlaying"
+            bind__saber-controls="bladeEnabled: isPlaying; isPaused: isPaused; enabled: true"
+            bind__saber-particles="enabled: isPlaying"
+            bind__trail="enabled: 1; trailType: settings.trailType; lifetime: settings.trailLength"
+            bind__cut-plane="enabled: isPlaying"
+            bind__raycaster="enabled: isPlaying && !settings.noEffects"
+            raycaster="objects: [raycastable-game]; far: 1; interval: 50"
+            saber-particles="hand: left"
+            saber-controls="hand: left"
+            trail="color: #008000; hand: left"
+            cut-plane="hand: left">
+
+            <a-entity class="saberContainer" rotation="90 0 0">
+              <a-entity
+                class="bladeContainer"
+                animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 750; easing: linear; startEvents: drawblade"
+                scale="0.001 0.001 0.001">
+                <a-entity
+                  class="blade bladeleft"
+                  geometry="primitive: box; height: 1.0; depth: 0.02; width: 0.02"
+                  material="shader: flat; color: #fff"
+                  scale="1 1 1"
+                  bind__scale="saberScale"
+                  position="0 -0.5 0"></a-entity>
+                <a-entity
+                  render-order="wall"
+                  class="saberglow"
+                  obj-model="obj: #saberGlowObj"
+                  material="shader: flat; color: #008000; blending: additive; opacity: 0.08; depthWrite: false"
+                  scale="1 1 1"
+                  bind__scale="saberGlowScale"
+                  position="0 -0.5 0"></a-entity>
+              </a-entity>
+              <a-entity
+                class="saberHandle"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.15;"
+                scale="1 1 1"
+                bind__scale="saberScale"
+                material="shader: flat; color: #008000"
+                position="0 0.08 0">
+                <a-entity
+                class="highlightTop"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 -0.08 0"></a-entity>
+              <a-entity
+                class="highlightBottom"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 0.08 0.0"></a-entity>
+              </a-entity>
+            </a-entity>
+          </a-entity>
+
+          <!-- <a-entity
+            id="leftCursorMesh"
+            mixin="cursorMesh"
+            bind__cursor-mesh="active: leftRaycasterActive && !isPlaying"
+            cursor-mesh="cursorEl: #leftHand"
+            material="color: pink"
+            scale="1.3 1.3 1.3"></a-entity> -->
+        
+        
+          <a-entity id="rightHand"
+            render-order="wall"
+            class="saber"
+            bind__pauser="enabled: isPlaying"
+            bind__saber-controls="bladeEnabled: isPlaying; isPaused: isPaused; enabled: true"
+            bind__saber-particles="enabled: isPlaying"
+            bind__trail="enabled: 1; trailType: settings.trailType; lifetime: settings.trailLength"
+            bind__cut-plane="enabled: isPlaying"
+            bind__raycaster="enabled: isPlaying && !settings.noEffects"
+            raycaster="objects: [raycastable-game]; far: 1; interval: 50"
+            saber-particles="hand: right"
+            saber-controls="hand: right"
+            trail="color: #008000; hand: right"
+            cut-plane="hand: right">
+
+            <a-entity class="saberContainer" rotation="90 0 0">
+              <a-entity
+                class="bladeContainer"
+                animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 750; easing: linear; startEvents: drawblade"
+                scale="0.001 0.001 0.001">
+                <a-entity
+                  class="blade bladeright"
+                  geometry="primitive: box; height: 1.0; depth: 0.02; width: 0.02"
+                  material="shader: flat; color: #fff"
+                  scale="1 1 1"
+                  bind__scale="saberScale"
+                  position="0 -0.5 0"></a-entity>
+                <a-entity
+                  render-order="wall"
+                  class="saberglow"
+                  obj-model="obj: #saberGlowObj"
+                  material="shader: flat; color: #008000; blending: additive; opacity: 0.08; depthWrite: false"
+                  scale="1 1 1"
+                  bind__scale="saberGlowScale"
+                  position="0 -0.5 0"></a-entity>
+              </a-entity>
+              <a-entity
+                class="saberHandle"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.15;"
+                scale="1 1 1"
+                bind__scale="saberScale"
+                material="shader: flat; color: #008000"
+                position="0 0.08 0">
+                <a-entity
+                class="highlightTop"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 -0.08 0"></a-entity>
+              <a-entity
+                class="highlightBottom"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 0.08 0.0"></a-entity>
+              </a-entity>
+            </a-entity>
+          </a-entity>
+
+          <!-- <a-entity
+            id="rightCursorMesh"
+            mixin="cursorMesh"
+            bind__cursor-mesh="active: rightRaycasterActive && !isPlaying"
+            cursor-mesh="cursorEl: #rightHand"
+            material="color: cyan"
+            scale="1.3 1.3 1.3"></a-entity> -->
+        
+        
+          <a-entity id="left2Hand"
+            render-order="wall"
+            class="saber"
+            bind__pauser="enabled: isPlaying"
+            bind__saber-controls="bladeEnabled: isPlaying; isPaused: isPaused; enabled: true"
+            bind__saber-particles="enabled: isPlaying"
+            bind__trail="enabled: 1; trailType: settings.trailType; lifetime: settings.trailLength"
+            bind__cut-plane="enabled: isPlaying"
+            bind__raycaster="enabled: isPlaying && !settings.noEffects"
+            raycaster="objects: [raycastable-game]; far: 1; interval: 50"
+            saber-particles="hand: left2"
+            saber-controls="hand: left2"
+            trail="color: #ff0000; hand: left2"
+            cut-plane="hand: left2">
+
+            <a-entity class="saberContainer" rotation="90 0 0">
+              <a-entity
+                class="bladeContainer"
+                animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 750; easing: linear; startEvents: drawblade"
+                scale="0.001 0.001 0.001">
+                <a-entity
+                  class="blade bladeleft2"
+                  geometry="primitive: box; height: 1.0; depth: 0.02; width: 0.02"
+                  material="shader: flat; color: #fff"
+                  scale="1 1 1"
+                  bind__scale="saberScale"
+                  position="0 -0.5 0"></a-entity>
+                <a-entity
+                  render-order="wall"
+                  class="saberglow"
+                  obj-model="obj: #saberGlowObj"
+                  material="shader: flat; color: #ff0000; blending: additive; opacity: 0.08; depthWrite: false"
+                  scale="1 1 1"
+                  bind__scale="saberGlowScale"
+                  position="0 -0.5 0"></a-entity>
+              </a-entity>
+              <a-entity
+                class="saberHandle"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.15;"
+                scale="1 1 1"
+                bind__scale="saberScale"
+                material="shader: flat; color: #ff0000"
+                position="0 0.08 0">
+                <a-entity
+                class="highlightTop"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 -0.08 0"></a-entity>
+              <a-entity
+                class="highlightBottom"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 0.08 0.0"></a-entity>
+              </a-entity>
+            </a-entity>
+          </a-entity>
+
+          <!-- <a-entity
+            id="left2CursorMesh"
+            mixin="cursorMesh"
+            bind__cursor-mesh="active: left2RaycasterActive && !isPlaying"
+            cursor-mesh="cursorEl: #left2Hand"
+            material="color: pink"
+            scale="1.3 1.3 1.3"></a-entity> -->
+        
+        
+          <a-entity id="right2Hand"
+            render-order="wall"
+            class="saber"
+            bind__pauser="enabled: isPlaying"
+            bind__saber-controls="bladeEnabled: isPlaying; isPaused: isPaused; enabled: true"
+            bind__saber-particles="enabled: isPlaying"
+            bind__trail="enabled: 1; trailType: settings.trailType; lifetime: settings.trailLength"
+            bind__cut-plane="enabled: isPlaying"
+            bind__raycaster="enabled: isPlaying && !settings.noEffects"
+            raycaster="objects: [raycastable-game]; far: 1; interval: 50"
+            saber-particles="hand: right2"
+            saber-controls="hand: right2"
+            trail="color: #335aff; hand: right2"
+            cut-plane="hand: right2">
+
+            <a-entity class="saberContainer" rotation="90 0 0">
+              <a-entity
+                class="bladeContainer"
+                animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 750; easing: linear; startEvents: drawblade"
+                scale="0.001 0.001 0.001">
+                <a-entity
+                  class="blade bladeright2"
+                  geometry="primitive: box; height: 1.0; depth: 0.02; width: 0.02"
+                  material="shader: flat; color: #fff"
+                  scale="1 1 1"
+                  bind__scale="saberScale"
+                  position="0 -0.5 0"></a-entity>
+                <a-entity
+                  render-order="wall"
+                  class="saberglow"
+                  obj-model="obj: #saberGlowObj"
+                  material="shader: flat; color: #335aff; blending: additive; opacity: 0.08; depthWrite: false"
+                  scale="1 1 1"
+                  bind__scale="saberGlowScale"
+                  position="0 -0.5 0"></a-entity>
+              </a-entity>
+              <a-entity
+                class="saberHandle"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.15;"
+                scale="1 1 1"
+                bind__scale="saberScale"
+                material="shader: flat; color: #335aff"
+                position="0 0.08 0">
+                <a-entity
+                class="highlightTop"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 -0.08 0"></a-entity>
+              <a-entity
+                class="highlightBottom"
+                geometry="primitive: cylinder; radius: 0.02; height: 0.01;"
+                material="shader: flat; color: #FFFFFF"
+                position="0 0.08 0.0"></a-entity>
+              </a-entity>
+            </a-entity>
+          </a-entity>
+
+          <!-- <a-entity
+            id="right2CursorMesh"
+            mixin="cursorMesh"
+            bind__cursor-mesh="active: right2RaycasterActive && !isPlaying"
+            cursor-mesh="cursorEl: #right2Hand"
+            material="color: cyan"
+            scale="1.3 1.3 1.3"></a-entity> -->
+        
+      </a-entity>
+      <!-- <a-mixin
+        id="cursorMesh"
+        material="shader: flat; transparent: true; src: #cursorMeshImg; depthTest: false"
+        ></a-mixin> -->
+
+            <!-- Player. -->
+      <a-entity id="defaultRig" class="floatingCamera">
+        <a-entity id="mainCamera" class="mainCamera" position="0 1.75 2.0" camera="active: true" look-controls wasd-controls>
+        </a-entity>
+      </a-entity>
+      <a-entity id="headRig" class="headCamera">
+        <a-entity id="povCamera" class="povCamera" rotation="0 0 -1" camera="fov: 60; active: false"
+        bind__camera="fov: settings.fov"
+        bind__aabb-collider="enabled: isPlaying"
+        aabb-collider="objects: [data-collidable-head]; interval: 50; collideNonVisible: false"
+        proxy-event__wallhitstart="event: hitstart; to: a-scene; as: wallhitstart"
+        proxy-event__wallhitend="event: hitend; to: a-scene; as: wallhitend">
+        </a-entity>
+      </a-entity>
+      <a-entity 
+        id="head" 
+        class="headset"
+        obj-model="obj: #questObj"
+        bind__visible="settings.showHeadset && !pov"
+        position="0 1.7 0.0">
+        </a-entity>
+      </a-entity>
+
+      <a-entity 
+        id="orthographicBack" 
+        class="orthographicBack" 
+        position="0 1.4 4.0" 
+        orthographic-camera="viewportPosition: 2; far: 25; aspect: 1.333"
+        bind__orthographic-camera="active: settings.orthographicBackEnabled; frustum: settings.orthographicBackFrustum">
+      </a-entity>
+      <a-entity 
+        id="orthographicRight" 
+        class="orthographicRight" 
+        position="2.0 1.4 0.0" 
+        rotation="0 90 0" 
+        orthographic-camera="viewportPosition: 1; far: 10; aspect: 1.333"
+        bind__orthographic-camera="active: settings.orthographicRightEnabled; frustum: settings.orthographicRightFrustum">
+      </a-entity>
+      <a-entity 
+        id="orthographicTop" 
+        class="orthographicTop" 
+        position="0.0 4.0 0.0" 
+        rotation="-90 0 0" 
+        orthographic-camera="viewportPosition: 3; far: 10; aspect: 1.333"
+        bind__orthographic-camera="active: settings.orthographicTopEnabled; frustum: settings.orthographicTopFrustum">
+      </a-entity>
+
+      <a-entity
+        id="mouseCursor"
+        bind__raycaster="enabled: !inVR"
+        mixin="raycaster"
+        cursor="rayOrigin: mouse"
+        raycaster="objects: [raycastable]"></a-entity>
+      <a-entity
+        id="mouseCursorMesh"
+        mixin="cursorMesh"
+        cursor-mesh="cursorEl: #mouseCursor"
+        bind__cursor-mesh="active: menuActive"></a-entity>
+    </a-scene>
+
+    <div id="controls">
+  <a id="controlsVolume" title="Adjust volume"><img src="assets/img/volume.svg"></a>
+
+  <div id="volumeSliderContainer">
+    <button id="mixer" title="Volume mixer"><i class="fas fa-sliders-h"></i></button>
+    <input id="volumeSlider" title="Volume" type="range" min="0" max="1" step="0.01" value="0.3"></input>
+    <div id="mixerContainer" class="volumeHide" style="display: flex; flex-direction: row-reverse;">
+      <div style="display: grid;">
+        <i class="fas fa-music" style="color: white; transform: rotate(90deg);"></i>
+        <i class="fas fa-caret-square-down" style="color: white; transform: rotate(90deg);"></i>
+      </div>
+      
+      <div style="display: grid;">
+        <input id="musicSlider" title="Music Volume" type="range" min="0" max="1" step="0.01" value="0.3"></input>
+        <input id="hitsoundSlider" title="Hitsound Volume" type="range" min="0" max="1" step="0.01" value="0.3"></input>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label>
+      <div class="btn play" id="controlsPause" title="Play/Pause">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
+      </div>
+    </label>
+  </div>
+
+  <div id="timeline">
+    <div id="timelineLine">
+      <div id="playhead"></div>
+    </div>
+    <p id="timelineHover"></p>
+  </div>
+
+  <p id="songTime">
+    <span id="songProgress">0:00</span>
+    /
+    <span id="songDuration">-:--</span>
+  </p>
+
+  <div id="speedSliderContainer">
+    <div id="rangeTicks">
+      <svg role="presentation" class="rangeSVG" height="8" width="100" xmlns="http://www.w3.org/2000/svg">
+        <rect class="range__tick" x="0%" y="3" width="1" height="10"></rect>
+        <rect class="range__tick" x="25%" y="3" width="1" height="10"></rect>
+        <rect class="range__tick" x="50%" y="3" width="1" height="10"></rect>
+        <rect class="range__tick" x="75%" y="3" width="1" height="10"></rect>
+        <rect class="range__tick" x="100%" y="3" width="1" height="10"></rect>
+      </svg>
+    </div>
+    <input id="speedSlider" title="Replay speed" type="range" min="0" max="2" step="0.01" oninput="this.style.setProperty('--value',this.value)"; ></input>
+
+    <div id="rangePoints">
+      <svg role="presentation" class="rangePointsSvg" height="8" width="112" xmlns="http://www.w3.org/2000/svg">
+        <text class="range__point" x="0%" y="8" text-anchor="start">  0  </text>
+        <text class="range__point" x="25%" y="8" text-anchor="middle">  0.5</text>
+        <text class="range__point" x="50%" y="8" text-anchor="middle">  1  </text>
+        <text class="range__point" x="75%" y="8" text-anchor="middle">1.5  </text>
+        <text class="range__point" x="100%" y="8" text-anchor="end">  2  </text>
+      </svg>
+    </div>
+  </div>
+
+  <p id="songSpeed">
+    <span id="songSpeedPercent">1x</span>
+  </p>
+
+  <p id="skipIntro" style="display: none;">Skip intro</p>
+
+  <a id="controlsCamera" title="Camera settings"><img src="assets/img/camera.png"></a>
+
+  <div id="cameraSettingsContainer">
+    <div>
+      <div class="settingHeader">First person camera</div>
+      <div class="toggleButton" title="First person camera field of view">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Field of view:</nobr></td></label>
+            <label id="fovLabel" class="toggleButtonLabel" style="margin-left: 33px;">60°</label>
+          </div>
+          <input id="fov" type="range" min="30" max="150" step="1" value="60">
+        </label>
+      </div>
+      <div class="toggleButton" title="Rotate camera higher or lower on X axis">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>X rotation offset:</nobr></td></label>
+            <label id="cameraXRotationLabel" class="toggleButtonLabel" style="margin-left: 51px;">0°</label>
+          </div>
+          <input id="cameraXRotation" type="range" min="-100" max="100" step="1" value="0">
+        </label>
+      </div>
+      <div class="toggleButton" title="How far back would be camera relative to the player.">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Z position offset:</nobr></td></label>
+            <label id="cameraZPositionLabel" class="toggleButtonLabel" style="margin-left: 51px;">1m</label>
+          </div>
+          <input id="cameraZPosition" type="range" min="-5" max="5" step="0.1" value="1">
+        </label>
+      </div>
+      <div class="settingHeader">Main camera</div>
+      <div id="cameraPositionContainer">
+        <button id="cameraToLeft" title='Select left camera (shift+q)'>< left</button>
+        <button id="cameraToCenter" title='Select center camera (shift+r)'>center</button>
+        <button id="cameraToRight" title='Select right camera (shift+e)'>right ></button>
+      </div>
+      <div id="cameraSaveContainer">
+        <button id="cameraSave" title='Save current camera position and rotation'>Save</button>
+        <button id="cameraRestore" title='Restore saved camera position and rotation'>Restore</button>
+      </div>
+      <div class="toggleButton" title="Use saved camera location and rotation as default on start.">
+        <label class="switch">
+          <input type="checkbox" id="savedCameraDefault">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Saved camera as default</nobr></td></label>
+      </div>
+    </div>
+    <div>
+      <div class="settingHeader">Orthographic camera</div>
+      <div class="toggleButton" title="Show back orthographic camera.">
+        <label class="switch">
+          <input type="checkbox" id="orthographicBackEnabled">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Back camera</nobr></td></label>
+      </div>
+      <div class="toggleButton" title="How far away from player camera would be">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Viewport:</nobr></td></label>
+            <label id="orthographicBackFrustumLabel" class="toggleButtonLabel" style="margin-left: 15px;">1.8</label>
+          </div>
+          <input id="orthographicBackFrustum" type="range" min="0.5" max="5" step="0.01" value="1.8">
+        </label>
+      </div>
+      <div class="toggleButton" title="Show right orthographic camera.">
+        <label class="switch">
+          <input type="checkbox" id="orthographicRightEnabled">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Right camera</nobr></td></label>
+      </div>
+      <div class="toggleButton" title="How far away from player camera would be">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Viewport:</nobr></td></label>
+            <label id="orthographicRightFrustumLabel" class="toggleButtonLabel" style="margin-left: 15px;">1.8</label>
+          </div>
+          <input id="orthographicRightFrustum" type="range" min="0.5" max="5" step="0.01" value="1.8">
+        </label>
+      </div>
+      <div class="toggleButton" title="Show top orthographic camera.">
+        <label class="switch">
+          <input type="checkbox" id="orthographicTopEnabled">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Top camera</nobr></td></label>
+      </div>
+      <div class="toggleButton" title="How far away from player camera would be">
+        <label>
+          <div>
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Viewport:</nobr></td></label>
+            <label id="orthographicTopFrustumLabel" class="toggleButtonLabel" style="margin-left: 15px;">1.8</label>
+          </div>
+          <input id="orthographicTopFrustum" type="range" min="0.5" max="5" step="0.01" value="1.8">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <a id="controlsFullscreen" title="Enter fullscreen (f)">
+    <svg class="enterFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+      <g><path d="M7 3H2v5h2V5h3V3zM18 8V3h-5v2h3v3h2zM13 17v-2h3v-3h2v5h-5zM4 12H2v5h5v-2H4v-3z"></path></g>
+    </svg>
+    <svg class="exitFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+      <g><path d="M8 8V3H6v3H2v2h6zM12 8h6V6h-4V3h-2v5zM12 17v-5h6v2h-4v3h-2zM8 12H2v2h4v3h2v-5z"></path></g>
+    </svg>
+  </a>
+
+  <a id="controlsSettings" title="Settings"><img src="assets/img/settings.png"></a>
+
+  <div id="settingsContainer">
+
+    <div class="toggleButtons" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="toggleButton" title="Show 3D model of headset synced with replay.">
+        <label class="switch">
+          <input type="checkbox" id="showHeadset">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Show headset</nobr></td></label>
+      </div>
+
+      <div class="toggleButton" title="Will play hitsound only when note is actually cut.">
+        <label class="switch">
+          <input type="checkbox" id="realHitsounds">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Real hitsounds</nobr></td></label>
+      </div>
+
+      <div class="toggleButton" title="Will add color highlight for all missed notes, walls and bombs.">
+        <label class="switch">
+          <input type="checkbox" id="highlightErrors">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel">
+          <td>
+            <nobr>Highlight errors</nobr>
+          </td>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Different note score color based on score value.">
+        <label class="switch">
+          <input type="checkbox" id="colorScores">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel"><td><nobr>Color scores</nobr></td></label>
+      </div>
+
+      <div class="toggleButton" title="Disable parts of notes flying off.">
+        <label class="switch">
+          <input type="checkbox" id="reducedDebris">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel">
+          <td>
+            <nobr>Reduced debris</nobr>
+          </td>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Disable lasers, sparks, etc.">
+        <label class="switch">
+          <input type="checkbox" id="noEffects">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel">
+          <td>
+            <nobr>No effects</nobr>
+          </td>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Show collision boxes for notes and walls.">
+        <label class="switch">
+          <input type="checkbox" id="showHitboxes">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel">
+          <td>
+            <nobr>Show hitboxes</nobr>
+          </td>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Show fps counter for viewer and replay.">
+        <label class="switch">
+          <input type="checkbox" id="showFps">
+          <span class="slider round"></span>
+        </label>
+        <label class="toggleButtonLabel">
+          <td>
+            <nobr>Show fps</nobr>
+          </td>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Left saber color, will show for everyone.">
+        <input type="color" id="leftSaberColor" value="#ff0000">
+        <label class="toggleButtonLabel"><td><nobr>Left</nobr></td></label>
+      </div>
+
+      <div class="toggleButton" title="Different note score color based on score value.">
+        <input type="color" id="rightSaberColor" value="#335aff">
+        <label class="toggleButtonLabel"><td><nobr>Right</nobr></td></label>
+      </div>
+
+    </div>
+
+    <div class="sliders" style="display: flex; flex-direction: column; justify-content: space-between;">
+
+      <div class="toggleButton" title="Distance from player to note slowdown.">
+        <label>
+          <div style="height: .9em">
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Jump Distance:</nobr></td></label>
+            <label id="jdLabel" class="toggleButtonLabel" style="margin-left: 40px;">18</label>
+          </div>
+          <div style="height: 0; margin-left: 13px;">
+            <svg role="presentation" class="jdRangePoint" height="30" width="100" xmlns="http://www.w3.org/2000/svg">
+              <rect id="jdTick" class="jd__tick" x="33%" y="0" width="1" height="10"></rect>
+            </svg>
+          </div>
+          <input id="jd" type="range" min="5" max="50" step="0.2" value="18">
+          <div style="height: 10px; margin-left: 13px;">
+            <svg role="presentation" class="rangePointsSvg" height="30" width="120" xmlns="http://www.w3.org/2000/svg">
+              <text id="jdPoint" class="jd__point" x="33%" y="8" text-anchor="start">0</text>
+            </svg>
+          </div>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="How wide sabers would be compared to normal.">
+        <label>
+          <div style="height: .9em">
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Saber width:</nobr></td></label>
+            <label id="saberWidthLabel" class="toggleButtonLabel" style="margin-left: 28px;">100</label>
+          </div>
+          <input id="saberWidth" type="range" min="0" max="200" step="1" value="100">
+        </label>
+      </div>
+
+      <div class="toggleButton" title="How saber trails will appear">
+        <label>
+          <div style="height: .9em">
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Trail type:</nobr></td></label>
+          </div>
+          <select name="trails" style="margin-left: 5px; margin-bottom: 5px; font-size: .7em" id="trailType">
+            <option value="bright" selected>Bright</option>
+            <option value="dim">Dim</option>
+            <option value="timeDependence">Time dependence</option>
+            <option value="slim">Slim</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="toggleButton" title="Trail length">
+        <label>
+          <div style="height: .9em">
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Trail length: </nobr></td></label>
+            <label id="trailLengthLabel" class="toggleButtonLabel" style="margin-left: 28px;">20.0</label>
+          </div>
+          <input id="trailLength" type="range" min="5.0" max="40.0" step="1.0" value="20.0">
+        </label>
+      </div>
+
+      <div class="toggleButton" title="How many pixels would be rendered for point.">
+        <label>
+          <div style="height: .9em">
+            <label class="toggleButtonLabel" style="margin-left: 5px;"><td><nobr>Pixel ratio:</nobr></td></label>
+            <label id="pixelRatioLabel" class="toggleButtonLabel" style="margin-left: 20px;">1.5</label>
+          </div>
+          <input id="pixelRatio" type="range" min="0.1" max="3" step="0.1" value="1.5">
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ctxMenu">
+  <div class="panel-menu" role="menu" style="height: 40px;">
+    <div id="copyURL" class="menuitem" role="menuitemcheckbox" aria-checked="false" tabindex="0">
+      <div class="menuitem-icon">
+        <svg fill="none" height="24" width="24">
+          <path transform="scale(0.6) translate(0, 6)" d="M5.85 18.0c0.0-2.56 2.08-4.65 4.65-4.65h6.0V10.5H10.5c-4.14 .0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5h6.0v-2.85H10.5c-2.56 .0-4.65-2.08-4.65-4.65zM12.0 19.5h12.0v-3.0H12.0v3.0zm13.5-9.0h-6.0v2.85h6.0c2.56 .0 4.65 2.08 4.65 4.65s-2.08 4.65-4.65 4.65h-6.0V25.5h6.0c4.14 .0 7.5-3.36 7.5-7.5s-3.36-7.5-7.5-7.5z" fill="#fff"></path>
+        </svg>
+      </div>
+      <div class="menuitem-label">Copy URL</div>
+      <div class="menuitem-content"><div class="menuitem-toggle-checkbox"></div></div>
+    </div>
+    <div id="copyURLtime" class="menuitem" role="menuitemcheckbox" aria-checked="false" tabindex="0">
+      <div class="menuitem-icon">
+        <svg fill="none" height="24" width="24">
+          <path transform="scale(0.6) translate(0, 6)" d="M5.85 18.0c0.0-2.56 2.08-4.65 4.65-4.65h6.0V10.5H10.5c-4.14 .0-7.5 3.36-7.5 7.5s3.36 7.5 7.5 7.5h6.0v-2.85H10.5c-2.56 .0-4.65-2.08-4.65-4.65zM12.0 19.5h12.0v-3.0H12.0v3.0zm13.5-9.0h-6.0v2.85h6.0c2.56 .0 4.65 2.08 4.65 4.65s-2.08 4.65-4.65 4.65h-6.0V25.5h6.0c4.14 .0 7.5-3.36 7.5-7.5s-3.36-7.5-7.5-7.5z" fill="#fff"></path>
+        </svg>
+      </div>
+      <div class="menuitem-label">Copy URL with time and speed</div>
+      <div class="menuitem-content"><div class="menuitem-toggle-checkbox"></div></div>
+    </div>
+    <!-- <div id="showInspector" class="menuitem" role="menuitemcheckbox" aria-checked="false" tabindex="0">
+      <div class="menuitem-icon">
+        <svg fill="none" height="36" width="36">
+          <path clip-rule="evenodd" d="M20 10V8H17.19C16.74 7.22 16.12 6.54 15.37 6.04L17 4.41L15.59 3L13.42 5.17C13.39 5.16 13.37 5.16 13.34 5.16C13.18 5.12 13.02 5.1 12.85 5.07C12.79 5.06 12.74 5.05 12.68 5.04C12.46 5.02 12.23 5 12 5C11.51 5 11.03 5.07 10.58 5.18L10.6 5.17L8.41 3L7 4.41L8.62 6.04H8.63C7.88 6.54 7.26 7.22 6.81 8H4V10H6.09C6.03 10.33 6 10.66 6 11V12H4V14H6V15C6 15.34 6.04 15.67 6.09 16H4V18H6.81C7.85 19.79 9.78 21 12 21C14.22 21 16.15 19.79 17.19 18H20V16H17.91C17.96 15.67 18 15.34 18 15V14H20V12H18V11C18 10.66 17.96 10.33 17.91 10H20ZM16 15C16 17.21 14.21 19 12 19C9.79 19 8 17.21 8 15V11C8 8.79 9.79 7 12 7C14.21 7 16 8.79 16 11V15ZM10 14H14V16H10V14ZM10 10H14V12H10V10Z" fill="white" fill-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="menuitem-label">Show inspector</div>
+      <div class="menuitem-content"><div class="menuitem-toggle-checkbox"></div></div>
+    </div> -->
+  </div>
+</div>
+
+<a id="songLink" href="">
+  <span id="songInfoOverlay">
+    <img id="songImage">
+    <span id="songInfo">
+      <p id="songName"></p>
+      <p id="songSubName"></p>
+      <span id="difficultyLabel">
+        <p id="songDifficulty"></p>
+        <p id="songMode"></p>
+        <p id="songCustomDifficulty"></p>
+      </span>
+      <p id="modifiers"></p>
+    </span>
+  </span>
+</a>
+
+<a class="playerLink" id="playerLink0" href="">
+  <span class="playerInfoOverlay" id="playerInfoOverlay0">
+    <img class="playerAvatar" id="playerAvatar0">
+    <span class="playerInfo" id="playerInfo0">
+      <p class="playerName" id="playerName0"></p>
+      <img class="playerCountry" id="playerCountry0">
+    </span>
+  </span>
+</a>
+
+<a class="playerLink" id="playerLink1" href="">
+  <span class="playerInfoOverlay" id="playerInfoOverlay1">
+    <img class="playerAvatar" id="playerAvatar1">
+    <span class="playerInfo" id="playerInfo1">
+      <p class="playerName" id="playerName1"></p>
+      <img class="playerCountry" id="playerCountry1">
+    </span>
+  </span>
+</a>
+
+<div id="myChartBox">
+<canvas id="myChart"></canvas>
+<div>
+
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const labels=Array.from({length: 100}, (v, i) => i);
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'beforeCutRawScore',
+          data: [],
+          backgroundColor: '#ff000050',
+        },
+        {
+          label: 'afterCutRawScore',
+          data: [],
+          backgroundColor: '#00ff0050',
+        },
+        {
+          label: 'cutDistanceRawScore',
+          data: [],
+          backgroundColor: '#0000ff50',
+        },
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Chart.js Bar Chart - Stacked'
+        },
+      },
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+        },
+        y: {
+          stacked: true,
+          min: -115,
+          max: 115,
+        }
+      },
+      animation: {
+        duration: 0,
+      }
+    }
+  });
+  </script>
+
+<button id="povswitch" onmousedown="event.preventDefault();" title="First person view (shift+f)"></button>
+
+<a id="orthographicBackFullscreen" class="orthographicFullscreen" style="right: 23%; bottom: 0.5%; display: none;" title="Show fullscreen this camera">
+  <svg class="enterFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M7 3H2v5h2V5h3V3zM18 8V3h-5v2h3v3h2zM13 17v-2h3v-3h2v5h-5zM4 12H2v5h5v-2H4v-3z"></path></g>
+  </svg>
+  <svg class="exitFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M8 8V3H6v3H2v2h6zM12 8h6V6h-4V3h-2v5zM12 17v-5h6v2h-4v3h-2zM8 12H2v2h4v3h2v-5z"></path></g>
+  </svg>
+</a>
+
+<a id="orthographicRightFullscreen" class="orthographicFullscreen" style="right: 23%; top: 0.5%; display: none;" title="Show fullscreen this camera">
+  <svg class="enterFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M7 3H2v5h2V5h3V3zM18 8V3h-5v2h3v3h2zM13 17v-2h3v-3h2v5h-5zM4 12H2v5h5v-2H4v-3z"></path></g>
+  </svg>
+  <svg class="exitFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M8 8V3H6v3H2v2h6zM12 8h6V6h-4V3h-2v5zM12 17v-5h6v2h-4v3h-2zM8 12H2v2h4v3h2v-5z"></path></g>
+  </svg>
+</a>
+
+<a id="orthographicTopFullscreen" class="orthographicFullscreen" style="left: 23%; bottom: 0.5%; display: none;" title="Show fullscreen this camera">
+  <svg class="enterFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M7 3H2v5h2V5h3V3zM18 8V3h-5v2h3v3h2zM13 17v-2h3v-3h2v5h-5zM4 12H2v5h5v-2H4v-3z"></path></g>
+  </svg>
+  <svg class="exitFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M8 8V3H6v3H2v2h6zM12 8h6V6h-4V3h-2v5zM12 17v-5h6v2h-4v3h-2zM8 12H2v2h4v3h2v-5z"></path></g>
+  </svg>
+</a>
+
+<a id="orthographicMainFullscreen" class="orthographicFullscreen" style="left: 23%; top: 0.5%; display: none;" title="Show fullscreen this camera">
+  <svg class="enterFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M7 3H2v5h2V5h3V3zM18 8V3h-5v2h3v3h2zM13 17v-2h3v-3h2v5h-5zM4 12H2v5h5v-2H4v-3z"></path></g>
+  </svg>
+  <svg class="exitFullscreen" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px">
+    <g><path d="M8 8V3H6v3H2v2h6zM12 8h6V6h-4V3h-2v5zM12 17v-5h6v2h-4v3h-2zM8 12H2v2h4v3h2v-5z"></path></g>
+  </svg>
+</a>
+
+<a href="https://discord.gg/2RG5YVqtG6" style="display: none;" id="discord-corner" title="Join our discord!">
+  <svg color="#151513" fill="transparent" width="80" height="80" viewBox="0 0 250 250" class="discord-link" style="transform: rotate(0deg); position: absolute; top: 0; border: 0; right: 0;"><g>
+    <path d="M0,0 L250,250 L250,0 Z" fill="#7289da" ></path></g> <g class="discord-corner">
+      <svg color="#151513" width="120" height="120" viewBox="0 0 48 48" class="discord-logo-container">
+        <rect width="100%" height="100%" ></rect> <defs><g><defs>
+          <path id="discord-def-face" fill="#FEFFFF" d="M40,12C40,12,35.415,8.412,30,8L29.512,8.976C34.408,10.174,36.654,11.891,39,14C34.955,11.935,30.961,10,24,10S13.045,11.935,9,14C11.346,11.891,14.018,9.985,18.488,8.976L18,8C12.319,8.537,8,12,8,12S2.879,19.425,2,34C7.162,39.953,15,40,15,40L16.639,37.815C13.857,36.848,10.715,35.121,8,32C11.238,34.45,16.125,37,24,37S36.762,34.45,40,32C37.285,35.121,34.143,36.848,31.361,37.815L33,40C33,40,40.838,39.953,46,34C45.121,19.425,40,12,40,12Z"></path> <g id="discord-def-face-eyes"><path id="discord-def-face-left-eye" fill="currentfill" d="M17.5,30C15.567,30,14,28.209,14,26C14,23.791,15.567,22,17.5,22S21,23.791,21,26C21,28.209,19.433,30,17.5,30Z"></path> <path id="discord-def-face-right-eye" fill="currentfill" d="M30.5,30C28.567,30,27,28.209,27,26C27,23.791,28.567,22,30.5,22S34,23.791,34,26C34,28.209,32.433,30,30.5,30Z"></path></g></defs> <g id="discordFaceID66"><use href="#discord-def-face"></use> <g id="discord-logo-eyes" fill="#7289da"><mask id="mask-right-eye-wink"><ellipse fill="#F2F2E9" ry="15" rx="15" cy="39.7" cx="35"></ellipse> <ellipse fill="#000000" ry="15" rx="15" cy="40.5" cx="34"></ellipse></mask> <mask id="mask-eyes-angry"><rect height="48" width="48" y="0" x="0" fill="#F2F2E9"></rect> <rect transform="rotate(45 24,14.5)" height="24" width="24" y="2.5" x="12" fill="#000000"></rect></mask> <g class="discord-eyes"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#discord-def-face-eyes"></use></g></g></g> <mask id="mask-outer-layer"><a href="https://awesome.discord.io/join"><<rect width="100%" height="100%" fill="#F2F2E9"></rect> <circle r="42%" cx="50%" cy="50%" fill="#000000"></circle></mask> <mask id="mask-middle-layer"><rect width="100%" height="100%" fill="#000000"></rect> <circle r="43%" cx="50%" cy="50%" fill="#F2F2E9"></circle> <circle r="32%" cx="50%" cy="50%" fill="#000000"></circle></mask> <mask id="mask-inner-layer"><rect width="100%" height="100%" fill="#000000">
+            <a href="https://awesome.discord.io/join"></rect> <circle r="32%" cx="50%" cy="50%" fill="#F2F2E9"></circle></mask></g></defs> <g class="discord-logo softshake-animation"><use class="discord-original" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#discordFaceID66"></use></g>
+            </svg></g>
+          </svg>
+
+</a>
+<a href="https://patreon.com/beatleader" style="display: none;" id="patreon-corner" title="Support us on patreon!">
+  <svg color="#151513" fill="transparent" width="80" height="80" viewBox="0 0 250 250" class="patreon-link" style="transform: rotate(0deg); position: absolute; top: 0; border: 0; right: 0;"><g>
+    <path d="M0,0 L250,250 L250,0 Z" fill="#FF424D" ></path></g> 
+    <g class="patreon-logo">
+    <g xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" inkscape:groupmode="layer" inkscape:label="ink_ext_XXXXXX" transform="matrix(1.3333333,0,0,-1.3333333,0,767.70667)">
+      <g xmlns="http://www.w3.org/2000/svg" id="g12" transform="scale(0.012)">
+        <path d="m 3844.89,5757.79 c -1190.76,0 -2159.54,-969.65 -2159.54,-2161.59 0,-1188.33 968.78,-2155.12 2159.54,-2155.12 1187.08,0 2152.82,966.79 2152.82,2155.12 0,1191.94 -965.74,2161.59 -2152.82,2161.59" style="fill:#141518;fill-opacity:1;fill-rule:evenodd;stroke:none" id="path14"/>
+        <path d="M 0,0 H 1054.41 V 5757.81 H 0 V 0" style="fill:#141518;fill-opacity:1;fill-rule:evenodd;stroke:none" id="path16"/>
+      </g>
+    </g>
+  </g>
+  </svg>
+
+</a>
+<style type='text/css'>* { font-family: 'Avenir', Helvetica, Arial, sans-serif; } .discord-logo { transform: scale(0.7); transform-origin: 24px 24px; } .discord-corner { transform: rotate(45deg); transform-origin: 90px 200px; }.discord-logo.softshake-animation .discord-original { transform-origin: 24px 24px; } .discord-logo-container:hover .softshake-animation .discord-original, .animated .softshake-animation .discord-original { animation: softshake 2000ms linear forwards; } @keyframes softshake { 0%,66%,100% {transform:rotate( 0deg)} 3% {transform:rotate(-18.0deg)} 6% {transform:rotate( 14.4deg)} 9% {transform:rotate(-11.5deg)} 12% {transform:rotate( 9.21deg)} 15% {transform:rotate(-7.37deg)} 18% {transform:rotate( 5.89deg)} 21% {transform:rotate(-4.71deg)} 24% {transform:rotate( 3.77deg)} 27% {transform:rotate(-3.02deg)} 30% {transform:rotate( 2.41deg)} 33% {transform:rotate(-1.93deg)} 36% {transform:rotate( 1.54deg)} 39% {transform:rotate(-1.23deg)} 42% {transform:rotate( 0.99deg)} 45% {transform:rotate(-0.79deg)} 48% {transform:rotate( 0.63deg)} 51% {transform:rotate(-0.50deg)} 54% {transform:rotate( 0.40deg)} 57% {transform:rotate(-0.32deg)} 60% {transform:rotate( 0.25deg)} 63% {transform:rotate(-0.20deg)} }</style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2YR65Z0H1Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2YR65Z0H1Z');
+</script>
+
+
+    <span id="iframeUrl"></span>
+  </body>
+</html>
