@@ -7,7 +7,7 @@
 
 ## Compare
 
-![Diff](https://user-images.githubusercontent.com/21212051/190094735-21c07ecc-5849-4dc9-9c40-4417bb0387c2.png)
+![Diff](https://user-images.githubusercontent.com/21212051/190116874-f6f4c843-0409-480a-8fbe-ba9e9ff7ee9d.png)
 
 Display saber movements of 2 players and diff score details (beforeCut, afterCut and cutDistance).
 
