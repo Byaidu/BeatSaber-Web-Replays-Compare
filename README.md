@@ -24,10 +24,10 @@ https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=[Playe
 For example:
 
 `
-https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=866231
+https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=1131276
 `
 
-**[Show Example](https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=866231)**
+**[Show Example](https://byaidu.github.io/BeatSaber-Web-Replays-Compare/index.html?scoreId=1135192&scoreId2=1131276)**
 
 ## About
 
