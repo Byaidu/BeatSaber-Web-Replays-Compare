@@ -1031,31 +1031,7 @@ AFRAME.registerComponent('beat', {
 				}
 				myChart[1].update()
 			}
-		}
-
-		if (score < 0) {
-			if (score == -3) {
-				var missEl = hand === 'left' ? this.missElLeft : this.missElRight;
-				if (!missEl) {
-					return;
-				}
-				missEl.object3D.position.copy(this.el.object3D.position);
-				missEl.object3D.position.y += 0.2;
-				missEl.object3D.position.z -= 0.5;
-				missEl.object3D.visible = true;
-				missEl.emit('beatmiss', null, true);
-			} else if (score == -2) {
-				var wrongEl = hand === 'left' ? this.wrongElLeft : this.wrongElRight;
-				if (!wrongEl) {
-					return;
-				}
-				wrongEl.object3D.position.copy(this.el.object3D.position);
-				wrongEl.object3D.position.y += 0.2;
-				wrongEl.object3D.position.z -= 0.5;
-				wrongEl.object3D.visible = true;
-				wrongEl.emit('beatwrong', null, true);
-			}
-		} else {
+			
 			const scoreEl = this.el.sceneEl.components['pool__beatscoreok'].requestEntity();
 			const colorAndScale = this.colorAndScaleForScore(this.replayNote);
 			let diff = [0,0,0];
@@ -1093,6 +1069,30 @@ AFRAME.registerComponent('beat', {
 			//   this.superCuts[this.superCutIdx].components.supercutfx.createSuperCut(this.el.object3D.position);
 			//   this.superCutIdx = (this.superCutIdx + 1) % this.superCuts.length;
 			// }
+		}
+
+		if (score < 0) {
+			if (score == -3) {
+				var missEl = hand === 'left' ? this.missElLeft : this.missElRight;
+				if (!missEl) {
+					return;
+				}
+				missEl.object3D.position.copy(this.el.object3D.position);
+				missEl.object3D.position.y += 0.2;
+				missEl.object3D.position.z -= 0.5;
+				missEl.object3D.visible = true;
+				missEl.emit('beatmiss', null, true);
+			} else if (score == -2) {
+				var wrongEl = hand === 'left' ? this.wrongElLeft : this.wrongElRight;
+				if (!wrongEl) {
+					return;
+				}
+				wrongEl.object3D.position.copy(this.el.object3D.position);
+				wrongEl.object3D.position.y += 0.2;
+				wrongEl.object3D.position.z -= 0.5;
+				wrongEl.object3D.visible = true;
+				wrongEl.emit('beatwrong', null, true);
+			}
 		}
 	},
 
